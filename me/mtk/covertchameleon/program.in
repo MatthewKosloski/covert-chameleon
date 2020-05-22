@@ -1,0 +1,24 @@
+// This is an inline-comment
+
+(+ 4 4)
+(+ 1 2 3)
+
+// These
+// are
+// multiple
+// inline comments!
+(+ 5 (* 2 2.25) 6)
+
+/* This is an inline C-style comment block */
+
+(* -(+ +2 -3) -2 +(* 9 -3))
+
+/*
+    This is a multi-line
+    C-style comment block :)
+*/ (/ 47 7)
+
+/*
+    ...and another one
+*/
+(* (- (* 10.5 5) 10) 2)
