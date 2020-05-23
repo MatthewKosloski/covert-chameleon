@@ -1,12 +1,16 @@
 package me.mtk.covertchameleon;
 
+import java.util.List;
+
 abstract class Expr 
 {
 	interface Visitor<T>
 	{
 		T visitBinaryExpr(Binary expr);
 		T visitUnaryExpr(Unary expr);
-		T visitNumberExpr(Number expr);
+		T visitLiteralExpr(Literal expr);
+		T visitPrintExpr(Print expr);
+		T visitLetExpr(Let expr);
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
@@ -49,11 +53,11 @@ abstract class Expr
 		}
 	}
 
-	static class Number extends Expr
+	static class Literal extends Expr
 	{
-		final double value;
+		final Object value;
 
-		public Number(double value)
+		public Literal(Object value)
 		{
 			this.value = value;
 		}
@@ -61,7 +65,41 @@ abstract class Expr
 		@Override
 		public <T> T accept(Visitor<T> visitor)
 		{
-			return visitor.visitNumberExpr(this);
+			return visitor.visitLiteralExpr(this);
 		}
+	}
+
+	static class Print extends Expr
+	{
+		final List<Expr> exprs;
+
+		public Print(List<Expr> exprs)
+		{
+			this.exprs = exprs;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitPrintExpr(this);
+		} 
+	}
+
+	static class Let extends Expr
+	{
+		final Scope scope;
+		final List<Expr> exprs;
+
+		public Let(Scope scope, List<Expr> exprs)
+		{
+			this.scope = scope;
+			this.exprs = exprs;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitLetExpr(this);
+		} 
 	}
 }
