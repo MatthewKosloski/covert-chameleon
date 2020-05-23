@@ -24,7 +24,7 @@ program          -> expression* EOF ;
 
 expression       -> equality 
                  | let 
-                 | print;
+                 | print ;
 
 equality         -> "(" ("==" | "!=") comparison comparison+ ")" ;
 comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
