@@ -144,40 +144,40 @@ public class Lexer
         switch (currentChar)
         {
             // Grouping characters
-            case '(': addToken(TokenType.LPAREN, null); break;
-            case ')': addToken(TokenType.RPAREN, null); break;
+            case '(': addToken(TokenType.LPAREN); break;
+            case ')': addToken(TokenType.RPAREN); break;
 
             // Binary arithmetic operators
-            case '+': addToken(TokenType.PLUS, null); break;
-            case '-': addToken(TokenType.MINUS, null); break;
-            case '*': addToken(TokenType.STAR, null); break;
+            case '+': addToken(TokenType.PLUS); break;
+            case '-': addToken(TokenType.MINUS); break;
+            case '*': addToken(TokenType.STAR); break;
 
             // == operator
             case '=':
                 if (match('='))
-                    addToken(TokenType.EQUAL_TO, null);
+                    addToken(TokenType.EQUAL_TO);
                 break;
             
             // != operator
             case '!':
                 if (match('='))
-                    addToken(TokenType.NOT_EQUAL_TO, null);
+                    addToken(TokenType.NOT_EQUAL_TO);
                 break;
 
             // > and >= operators
             case '>':
                 if (match('='))
-                    addToken(TokenType.GREATER_THAN_OR_EQUAL_TO, null);
+                    addToken(TokenType.GREATER_THAN_OR_EQUAL_TO);
                 else
-                    addToken(TokenType.GREATER_THAN, null);
+                    addToken(TokenType.GREATER_THAN);
             break;
 
             // < and <= operators
             case '<':
                 if (match('='))
-                    addToken(TokenType.LESS_THAN_OR_EQUAL_TO, null);
+                    addToken(TokenType.LESS_THAN_OR_EQUAL_TO);
                 else
-                    addToken(TokenType.LESS_THAN, null);
+                    addToken(TokenType.LESS_THAN);
             break;
 
             // Comments and binary division operator
@@ -187,7 +187,7 @@ public class Lexer
                 else if (match('*')) 
                     consumeBlockComment();
                 else 
-                    addToken(TokenType.SLASH, null);
+                    addToken(TokenType.SLASH);
                 break;
 
             default:
@@ -199,7 +199,7 @@ public class Lexer
                 }
                 else
                 {
-                    addToken(TokenType.UNIDENTIFIED, null);
+                    addToken(TokenType.UNIDENTIFIED);
                 }
                 break;
         }
@@ -389,12 +389,11 @@ public class Lexer
     /*
      * Adds a token to the accumulated list of tokens.
      * 
-     * @param type The type of the token 
-     * @param literal The literal value (if number)
+     * @param type The type of the token
      */
-    private void addToken(TokenType type, Object literal)
+    private void addToken(TokenType type)
     {
-        addToken(type, literal, currentLineNumber, currentColumnNumber);
+        addToken(type, null, currentLineNumber, currentColumnNumber);
     }
 
     /*
