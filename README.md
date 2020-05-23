@@ -9,7 +9,10 @@ Covert Chameleon is the second iteration of the Torrey interpreter, a continuati
 The interpreter has all of the functionality included in Magnetic Moose (interpretation of fully parenthesized arithmetic expressions) but adds the following:
 
 - A `let` expression that creates a lexical scope and binds values to identifiers within the scope
-- Control flow structures (if-else, for-loop, and while-loop)
+- Control flow structures (if-else, for-loop, and while-loop) 
+- Relational (e.g, `>=`) and logical (e.g., `==`) operators
+- Boolean data types (`true` and `false`)
+- Null data type (`null`)
 - `print` expression for sending output to the standard output stream
 
 ## Grammar
@@ -17,5 +20,25 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 `Parser.java` implements the following grammar that describes the language's syntax:
 
 ```
-<insert_grammar_here>
+program          -> expression* EOF ;
+
+expression       -> equality 
+                 | let 
+                 | print;
+
+equality         -> "(" ("==" | "!=") comparison comparison+ ")" ;
+comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) arithmetic arithmetic+ ")" ; 
+arithmetic       -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
+unary            -> ("+" | "-")? (arithmetic | literal) ;
+
+let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
+print            -> "(" "print" equality+ ")" ;
+
+literal          -> number | identifier 
+                 | boolean 
+                 | "null" ;
+
+number           -> [0-9]+ "." [0-9]+ | [0-9]+ ;
+identifier       -> [a-zA-Z_$] [a-zA-Z_$0-9?]* ;
+boolean          -> ("true" | "false") ;
 ```
