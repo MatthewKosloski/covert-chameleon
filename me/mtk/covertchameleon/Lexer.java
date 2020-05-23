@@ -71,9 +71,15 @@ public class Lexer
         keywords.put("let", TokenType.LET);
         keywords.put("true", TokenType.TRUE);
         keywords.put("false", TokenType.FALSE);
-        keywords.put("null", TokenType.NULL);        
+        keywords.put("null", TokenType.NULL);
     }
 
+    /**
+     * Initializes a new Lexer with a source program.
+     * 
+     * @param source A source program written in the language
+     * being interpreted.
+     */
     public Lexer(String source)
     {
         this.source = source;
