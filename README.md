@@ -27,9 +27,9 @@ expression       -> equality
                  | print;
 
 equality         -> "(" ("==" | "!=") comparison comparison+ ")" ;
-comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) arithmetic arithmetic+ ")" ; 
-arithmetic       -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
-unary            -> ("+" | "-")? (arithmetic | literal) ;
+comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
+binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
+unary            -> ("+" | "-")? (binary | literal) ;
 
 let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
 print            -> "(" "print" equality+ ")" ;
