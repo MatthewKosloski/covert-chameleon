@@ -64,32 +64,8 @@ public class CovertChameleon
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.getTokens();
 
-        // If the only token is EOF (no program), then don't try
-        // to parse and interpret.
-        if (tokens.size() != 1)
-        {
-            try
-            {
-                List<Expr> expressions = new Parser(tokens).parse();
-                List<String> values = interpreter.interpret(expressions);
-
-                // Send the values of the expressions to stdout.
-                for(String value : values)
-                    System.out.println(value);
-            }
-            catch (ParseError err)
-            {
-                String line = lexer.getLine(err.getToken().line);
-                displayErrorMessage(err, line);
-                hadError = true;
-            }
-            catch (RuntimeError err)
-            {
-                String line = lexer.getLine(err.getToken().line);
-                displayErrorMessage(err, line);
-                hadRuntimeError = true;
-            }
-        }
+        for (Token token : tokens)
+            System.out.println(token);
     }
 
     /*
