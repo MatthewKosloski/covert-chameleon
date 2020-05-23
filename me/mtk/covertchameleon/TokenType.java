@@ -3,7 +3,7 @@ package me.mtk.covertchameleon;
 enum TokenType 
 {
     // Grouping tokens
-    LPAREN, RPAREN,
+    LPAREN, RPAREN, LBRACKET, RBRACKET,
 
     // Binary arithmetic tokens
     PLUS, MINUS, STAR,
@@ -37,6 +37,9 @@ enum TokenType
 
     // Null
     NULL,
+
+    // Identifier (e.g., variable name)
+    IDENTIFIER,
     
     // End of file token
     EOF
