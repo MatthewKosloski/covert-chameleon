@@ -6,7 +6,7 @@
             "request": "launch",
             "mainClass": "me.mtk.covertchameleon.CovertChameleon",
             "projectName": "covert-chameleon_ba5b9cc6",
-            "cwd": "${workspaceFolder}/me/mtk/covertchameleong",
+            "cwd": "${workspaceFolder}/me/mtk/covertchameleon",
             "args": "program.in"
         }
     ]
