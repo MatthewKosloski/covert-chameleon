@@ -2,6 +2,8 @@ package me.mtk.covertchameleon;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 // The Lexer is the part of the interpreter that takes
 // a source program (written in the language that is
@@ -58,6 +60,19 @@ public class Lexer
     // character that is to be processed. That is, the index of the character
     // that is currently being processed is one less than this value.
     private int position = 0;
+
+    // Stores the reserved identifiers of the language.
+    private static final Map<String, TokenType> keywords;
+
+    static 
+    {
+        keywords = new HashMap<>();
+        keywords.put("print", TokenType.PRINT);
+        keywords.put("let", TokenType.LET);
+        keywords.put("true", TokenType.TRUE);
+        keywords.put("false", TokenType.FALSE);
+        keywords.put("null", TokenType.NULL);        
+    }
 
     public Lexer(String source)
     {
