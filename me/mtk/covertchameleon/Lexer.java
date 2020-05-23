@@ -146,6 +146,8 @@ public class Lexer
             // Grouping characters
             case '(': addToken(TokenType.LPAREN); break;
             case ')': addToken(TokenType.RPAREN); break;
+            case '[': addToken(TokenType.LBRACKET); break;
+            case ']': addToken(TokenType.RBRACKET); break;
 
             // Binary arithmetic operators
             case '+': addToken(TokenType.PLUS); break;
@@ -155,19 +157,22 @@ public class Lexer
             // == operator
             case '=':
                 if (match('='))
-                    addToken(TokenType.EQUAL_TO);
+                    addToken(TokenType.EQUAL_TO, currentColumnNumber - 1);
                 break;
             
             // != operator
             case '!':
                 if (match('='))
-                    addToken(TokenType.NOT_EQUAL_TO);
+                    addToken(TokenType.NOT_EQUAL_TO, currentColumnNumber - 1);
                 break;
 
             // > and >= operators
             case '>':
                 if (match('='))
-                    addToken(TokenType.GREATER_THAN_OR_EQUAL_TO);
+                {
+                    addToken(TokenType.GREATER_THAN_OR_EQUAL_TO, 
+                        currentColumnNumber - 1);
+                }
                 else
                     addToken(TokenType.GREATER_THAN);
             break;
@@ -175,7 +180,10 @@ public class Lexer
             // < and <= operators
             case '<':
                 if (match('='))
-                    addToken(TokenType.LESS_THAN_OR_EQUAL_TO);
+                {
+                    addToken(TokenType.LESS_THAN_OR_EQUAL_TO, 
+                        currentColumnNumber - 1);
+                }
                 else
                     addToken(TokenType.LESS_THAN);
             break;
@@ -197,12 +205,30 @@ public class Lexer
                 {
                     // Ignore whitespace
                 }
+                else if (isStartOfIdentifier(currentChar))
+                {
+                    identifier();
+                }
                 else
                 {
                     addToken(TokenType.UNIDENTIFIED);
                 }
                 break;
         }
+    }
+
+    private void identifier()
+    {
+        // Cache the column number
+        int startColumn = currentColumnNumber;
+
+        // Consume the identifier
+        while (isPartOfIdentifier(peek())) nextChar();
+
+        String identifier = source.substring(lexemeStart, position);
+        TokenType type = keywords.get(identifier);
+
+        addToken(type == null ? TokenType.IDENTIFIER : type, startColumn);
     }
 
     /*
@@ -347,7 +373,7 @@ public class Lexer
         }
 
         double literal = Double.parseDouble(getLexeme());
-        addToken(TokenType.NUMBER, literal, currentLineNumber, startColumn);
+        addToken(TokenType.NUMBER, literal, startColumn);
     }
 
     /*
@@ -373,27 +399,45 @@ public class Lexer
     }
 
     /*
-     * Adds a token to the accumulated list of tokens.
-     * 
-     * @param type The type of the token 
-     * @param literal The literal value (if number)
-     * @param line The line at which the token is located
-     * @param column The starting column at which the token is located
-     */
-    private void addToken(TokenType type, Object literal, int line, int column)
-    {
-        Token token = new Token(type, getLexeme(), literal, line, column);
-        tokens.add(token);
-    }
-
-    /*
-     * Adds a token to the accumulated list of tokens.
+     * Adds a token to the accumulated list of tokens with the 
+     * provided type.
      * 
      * @param type The type of the token
      */
     private void addToken(TokenType type)
     {
-        addToken(type, null, currentLineNumber, currentColumnNumber);
+        tokens.add(new Token(type, getLexeme(), null, 
+            currentLineNumber, currentColumnNumber));
+    }
+
+    /*
+     * Adds a token to the accumulated list of tokens with the
+     * provided type and column number.
+     * 
+     * @param type The type of the token
+     * @param column The column number on the current line
+     * where the token occurs
+     */
+    private void addToken(TokenType type, int column)
+    {
+        tokens.add(new Token(type, getLexeme(), null, 
+            currentLineNumber, column));
+    }
+
+    /*
+     * Adds a token to the accumulated list of tokens with the 
+     * provided type, literal, and column.
+     * 
+     * @param type The type of the token 
+     * @param literal The literal value (used by the interpreter
+     * for quick evaluation)
+     * @param column The column number on the current line
+     * where the token occurs
+     */
+    private void addToken(TokenType type, Object literal, int column)
+    {
+        tokens.add(new Token(type, getLexeme(), literal, 
+            currentLineNumber, column));
     }
 
     /*
@@ -408,7 +452,7 @@ public class Lexer
         return c >= '0' && c <= '9';
     }
 
-    /**
+    /*
      * Indicates if the provided character is a white space
      * character.
      * 
@@ -418,5 +462,32 @@ public class Lexer
     private boolean isWhitespace(char c)
     {
         return c == ' ' || c == '\t' || c == '\r' || c == '\n';
+    }
+
+    /*
+     * Indicates if the provided character is the start of
+     * an identifier.
+     * 
+     * @param c A character from the source program.
+     * @return True if the character is the start of an identifer;
+     * False otherwise.
+     */
+    private boolean isStartOfIdentifier(char c)
+    {
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+            (c == '_') || (c == '$');  
+    }
+
+    /*
+     * Indicates if the provided character is part
+     * of an identifier.
+     * 
+     * @param c A character from the source program.
+     * @return True if the character is part of an identifier;
+     * False otherwise.
+     */
+    private boolean isPartOfIdentifier(char c)
+    {
+        return isStartOfIdentifier(c) || isDigit(c) || c == '?';
     }
 }
