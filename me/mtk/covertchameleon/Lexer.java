@@ -152,6 +152,34 @@ public class Lexer
             case '-': addToken(TokenType.MINUS, null); break;
             case '*': addToken(TokenType.STAR, null); break;
 
+            // == operator
+            case '=':
+                if (match('='))
+                    addToken(TokenType.EQUAL_TO, null);
+                break;
+            
+            // != operator
+            case '!':
+                if (match('='))
+                    addToken(TokenType.NOT_EQUAL_TO, null);
+                break;
+
+            // > and >= operators
+            case '>':
+                if (match('='))
+                    addToken(TokenType.GREATER_THAN_OR_EQUAL_TO, null);
+                else
+                    addToken(TokenType.GREATER_THAN, null);
+            break;
+
+            // < and <= operators
+            case '<':
+                if (match('='))
+                    addToken(TokenType.LESS_THAN_OR_EQUAL_TO, null);
+                else
+                    addToken(TokenType.LESS_THAN, null);
+            break;
+
             // Comments and binary division operator
             case '/': 
                 if (match('/')) 
