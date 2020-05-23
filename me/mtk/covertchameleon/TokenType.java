@@ -17,6 +17,27 @@ enum TokenType
     // Unidentified token,
     UNIDENTIFIED,
 
+    // Print expression
+    PRINT,
+
+    // Let expression
+    LET,
+
+    // == and != operators
+    EQUAL_TO, NOT_EQUAL_TO,
+
+    // > and >= operators
+    GREATER_THAN, GREATER_THAN_OR_EQUAL_TO,
+
+    // < and <= operators
+    LESS_THAN, LESS_THAN_OR_EQUAL_TO,
+
+    // Booleans
+    TRUE, FALSE,
+
+    // Null
+    NULL,
+    
     // End of file token
     EOF
 }
