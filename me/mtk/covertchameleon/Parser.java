@@ -49,7 +49,7 @@ public class Parser
 
     /*
      * Implements the following production rule:
-     * program -> binary ;
+     * program -> expression* EOF ;
      *
      * @return A list of expressions to be interpreted.
      */
@@ -58,67 +58,137 @@ public class Parser
         List<Expr> expressions = new ArrayList<>();
         
         while (hasTokens()) 
-            expressions.add(binary());
+            expressions.add(expression());
         
         return expressions;
     }
 
+    // expression -> equality | let | print ;
+    private Expr expression()
+    {
+        if (match(TokenType.LET))
+        {
+            System.out.println("expression -> let ;");
+            // let()
+        }
+        else if (match(TokenType.PRINT))
+        {
+            System.out.println("expression -> print ;");
+            // print()
+        }
+
+        // expression -> equality() ;
+        return equality();
+    }
+
+    // equality -> "(" ("==" | "!=") comparison comparison+ ")" ;
+    private Expr equality()
+    {
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.EQUAL_TO,
+            TokenType.NOT_EQUAL_TO))
+        {
+            // Consume (
+            nextToken();
+
+            Token operator = nextToken();
+            Expr first = comparison();
+            Expr second = comparison();
+            Expr expr = new Expr.Binary(operator, first, second);
+
+            // TODO: Refactor condition
+            while (peek(
+                TokenType.LPAREN, TokenType.NUMBER, 
+                TokenType.MINUS, TokenType.PLUS, 
+                TokenType.TRUE, TokenType.FALSE,
+                TokenType.NULL, TokenType.IDENTIFIER
+            ))
+            {
+                second = comparison();
+                expr = new Expr.Binary(operator, expr, second);
+            }
+
+            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            return expr;
+        }
+
+        return comparison();
+    }
+
+    // comparison -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
+    private Expr comparison()
+    {
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.GREATER_THAN, 
+            TokenType.GREATER_THAN_OR_EQUAL_TO, TokenType.LESS_THAN, 
+            TokenType.LESS_THAN_OR_EQUAL_TO))
+        {
+            // Consume (
+            nextToken();
+
+            Token operator = nextToken();
+            Expr first = binary();
+            Expr second = binary();
+            Expr expr = new Expr.Binary(operator, first, second);
+
+            // TODO: Refactor condition
+            while (peek(
+                TokenType.LPAREN, TokenType.NUMBER, 
+                TokenType.MINUS, TokenType.PLUS, 
+                TokenType.TRUE, TokenType.FALSE,
+                TokenType.NULL, TokenType.IDENTIFIER
+            ))
+            {
+                second = binary();
+                expr = new Expr.Binary(operator, expr, second);
+            }
+
+            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            return expr;
+        }
+
+        return binary();
+    }
+
     /*
      * Implements the following production rule:
-     * binary -> "(" ("+" | "-" | "*" | "/") unary (" " unary)+ ")" ;
+     * binary -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
      *
      * @return A binary expression.
      */
     private Expr binary()
     {
-        if (match(TokenType.LPAREN))
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, TokenType.MINUS,
+            TokenType.STAR, TokenType.SLASH))
         {
-            if (!isValidBinaryOperator(peek()))
-            {
-                if (peek().lexeme == "")
-                {
-                    throw new ParseError(peek(), "Expected a binary " 
-                    + "operator \"+\", \"-\", \"*\", or \"/\"");
-                }
-                else
-                {
-                    throw new ParseError(peek(), String.format("Expected a binary " 
-                    + "operator \"+\", \"-\", \"*\", or \"/\" but got \"%s\" "
-                    + "instead", peek().lexeme));
-                }
-            }
-            
-            Token operator = nextToken();
+            // Consume (
+            nextToken();
 
+            Token operator = nextToken();
             Expr first = unary();
             Expr second = unary();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            while (peek(TokenType.LPAREN, TokenType.NUMBER, 
-                TokenType.MINUS, TokenType.PLUS))
+            // TODO: Refactor condition
+            while (peek(
+                TokenType.LPAREN, TokenType.NUMBER, 
+                TokenType.MINUS, TokenType.PLUS, 
+                TokenType.TRUE, TokenType.FALSE,
+                TokenType.NULL, TokenType.IDENTIFIER
+            ))
             {
                 second = unary();
                 expr = new Expr.Binary(operator, expr, second);
             }
-            
-            String consumeMsg = String.format("Expected \")\" after " +
-            "expression but got \"%s\" instead", peek().lexeme);
 
-            if (peek().lexeme == "")
-                consumeMsg = String.format("Missing \")\" after expression");
-            
-            consume(TokenType.RPAREN, consumeMsg);
-            
+            consume(TokenType.RPAREN, "Missing closing \"(\"");
             return expr;
         }
 
-        throw new ParseError(peek(), String.format("Expected an expression " +
-            "starting with \"(\" but got \"%s\" instead", peek().lexeme));
+        return unary();
     }
 
      /*
      * Implements the following production rule:
-     * unary -> ("+" | "-")? (binary | number) ;
+     * unary -> ("+" | "-")? (binary | literal) ;
      *
      * @return A unary expression.
      */
@@ -129,45 +199,45 @@ public class Parser
             Token operator = previous();
             Expr right;
             if (peek(TokenType.LPAREN))
-                // unary -> ("+" | "-")? binary
+                // unary -> ("+" | "-") binary ;
                 right = binary();
             else
-                // unary -> ("+" | "-")? number
-                right = number();
+                // unary -> ("+" | "-") literal ;
+                right = literal();
 
             return new Expr.Unary(operator, right);
         }
         else if (peek(TokenType.LPAREN))
         {
-            // unary -> binary;
+            // unary -> binary ;
             return binary();
         }
-        else if (peek(TokenType.NUMBER))
-        {
-            // unary -> number;
-            return number();
-        }
         
-        throw new ParseError(peek(), "Expected an expression starting " +
-            "with either \"(\", \"+\", \"-\", or a number");
+        // unary -> literal ;
+        return literal();
     }
 
     /*
      * Implements the following production rule:
-     * number -> [0-9]+ "." [0-9]+ | [0-9]+ ;
+     * literal -> number | identifier | boolean | "null" ;
      *
      * @return A number expression.
      */
-    private Expr number()
+    private Expr literal()
     {
         if (match(TokenType.NUMBER))
-        {
-            return new Expr.Number((double) previous().literal);
-        }
+            return new Expr.Literal(previous().literal);
+        else if (match(TokenType.IDENTIFIER))
+            // TODO: Create Identifier expression
+            return new Expr.Literal(previous().lexeme);
+        else if (match(TokenType.TRUE))
+            return new Expr.Literal(true);
+        else if (match(TokenType.FALSE))
+            return new Expr.Literal(false);
+        else if (match(TokenType.NULL))
+            return new Expr.Literal(null);
 
-        throw new ParseError(peek(), String.format("Expected either a number " + 
-            "or \"(\" to come after the unary operator " +
-            "but got \"%s\" instead", peek().lexeme));
+        throw new ParseError(peek(), "Expected an expression");
     }
 
     /*
@@ -183,7 +253,7 @@ public class Parser
     {
         for (TokenType type : types)
         {
-            if (isNextTokenOfType(type))
+            if (peekType(type))
             {
                 nextToken();
                 return true;
@@ -203,20 +273,8 @@ public class Parser
      */
     private Token consume(TokenType type, String msg)
     {
-        if (isNextTokenOfType(type)) return nextToken();
+        if (peekType(type)) return nextToken();
         throw new ParseError(peek(), msg);
-    }
-
-    /*
-     * Indicates if the next token is of the provided type.
-     * 
-     * @param type The type of the token.
-     * @return True if the next token's TokenType is equal to
-     * type; False otherwise.
-     */
-    private boolean isNextTokenOfType(TokenType type)
-    {
-        return peek().type == type;
     }
 
     /*
@@ -254,6 +312,40 @@ public class Parser
     }
 
     /*
+     * Returns the next-next token.
+     * 
+     * @return The next-next token.
+     */
+    private Token peekNext()
+    {
+        return tokens.get(position + 1);
+    }
+
+    /*
+     * Indicates if the next token is of the provided type.
+     * 
+     * @param type The type of the token.
+     * @return True if the next token's TokenType is equal to
+     * type; False otherwise.
+     */
+    private boolean peekType(TokenType type)
+    {
+        return peek().type == type;
+    }
+
+    /*
+     * Indicates if the next-next token is of the provided type.
+     * 
+     * @param type The type of the token.
+     * @return True if the next-next token's TokenType is equal to
+     * type; False otherwise.
+     */
+    private boolean peekNextType(TokenType type)
+    {
+        return peekNext().type == type;
+    }
+
+    /*
      * Indicates whether the next token is one of 
      * the provided token types.
      *  
@@ -265,7 +357,24 @@ public class Parser
     {
         for (TokenType type : types)
         {
-            if (isNextTokenOfType(type)) return true;
+            if (peekType(type)) return true;
+        }
+        return false;
+    }
+
+    /*
+     * Indicates whether the next-next token is one of 
+     * the provided token types.
+     *  
+     * @param types A variable number of token types.
+     * @return True if the next-next token is one of the provided
+     * token types; False otherwise.
+     */
+    private boolean peekNext(TokenType... types)
+    {
+        for (TokenType type : types)
+        {
+            if (peekNextType(type)) return true;
         }
         return false;
     }
@@ -285,5 +394,4 @@ public class Parser
         return (operator.type == TokenType.PLUS || operator.type == TokenType.MINUS ||
             operator.type == TokenType.STAR || operator.type == TokenType.SLASH);
     }
-
 }
