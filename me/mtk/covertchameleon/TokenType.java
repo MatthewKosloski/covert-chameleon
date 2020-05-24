@@ -17,8 +17,8 @@ enum TokenType
     // Unidentified token,
     UNIDENTIFIED,
 
-    // Print expression
-    PRINT,
+    // Print expressions
+    PRINT, PRINTLN,
 
     // Let expression
     LET,

@@ -32,7 +32,7 @@ binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
 unary            -> ("+" | "-")? (binary | literal) ;
 
 let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
-print            -> "(" "print" equality+ ")" ;
+print            -> "(" ("print" | "println") equality+ ")" ;
 
 literal          -> number | identifier 
                  | boolean 

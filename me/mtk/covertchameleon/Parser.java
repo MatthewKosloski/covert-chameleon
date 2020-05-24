@@ -74,7 +74,8 @@ public class Parser
             // expression -> let ;
             System.out.println("expression -> let ;");
         }
-        else if (peek(TokenType.LPAREN) && peekNext(TokenType.PRINT))
+        else if (peek(TokenType.LPAREN) && 
+            peekNext(TokenType.PRINT, TokenType.PRINTLN))
         {
             // expression -> print ;
             return print();
@@ -84,19 +85,20 @@ public class Parser
         return equality();
     }
 
-    // print -> "(" "print" equality+ ")" ;
+    // print -> "(" ("print" | "println") equality+ ")" ;
     private Expr print()
     {
-        // Consume (print
+        // Consume (
         nextToken();
-        nextToken();
+
+        Token operator = nextToken();
 
         List<Expr> exprs = new ArrayList<>();
 
         while (hasExpression()) exprs.add(equality());
 
         consume(TokenType.RPAREN, "Missing closing \"(\"");
-        return new Expr.Print(exprs);
+        return new Expr.Print(operator, exprs);
     }
 
     // equality -> "(" ("==" | "!=") comparison comparison+ ")" ;

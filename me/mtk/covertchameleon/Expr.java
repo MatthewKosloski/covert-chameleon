@@ -72,10 +72,12 @@ abstract class Expr
 
 	static class Print extends Expr
 	{
+		final Token operator;
 		final List<Expr> exprs;
 
-		public Print(List<Expr> exprs)
+		public Print(Token operator, List<Expr> exprs)
 		{
+			this.operator = operator;
 			this.exprs = exprs;
 		}
 

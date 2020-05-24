@@ -26,7 +26,14 @@ public class Interpreter implements Expr.Visitor<Object>
     public Object visitPrintExpr(Expr.Print expr) 
     {
         for (Expr e : expr.exprs)
-            System.out.println(stringify(evaluate(e)));
+        {
+            String value = stringify(evaluate(e));
+            if (expr.operator.type == TokenType.PRINTLN)
+                System.out.println(value);
+            else
+                System.out.print(value);
+
+        }
         
         return null;
     }
