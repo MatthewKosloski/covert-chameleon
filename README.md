@@ -26,7 +26,7 @@ expression       -> equality
                  | let 
                  | print ;
 
-equality         -> "(" ("==" | "!=") comparison comparison+ ")" ;
+equality         -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
 unary            -> ("+" | "-")? (binary | literal) ;

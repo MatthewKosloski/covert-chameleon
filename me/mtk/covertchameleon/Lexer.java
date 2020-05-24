@@ -72,6 +72,10 @@ public class Lexer
         keywords.put("true", TokenType.TRUE);
         keywords.put("false", TokenType.FALSE);
         keywords.put("null", TokenType.NULL);
+
+        // Equality predicates
+        keywords.put("equal?", TokenType.EQUAL_TO);
+        keywords.put("nequal?", TokenType.NOT_EQUAL_TO);
     }
 
     /**
@@ -153,18 +157,6 @@ public class Lexer
             case '+': addToken(TokenType.PLUS); break;
             case '-': addToken(TokenType.MINUS); break;
             case '*': addToken(TokenType.STAR); break;
-
-            // == operator
-            case '=':
-                if (match('='))
-                    addToken(TokenType.EQUAL_TO, currentColumnNumber - 1);
-                break;
-            
-            // != operator
-            case '!':
-                if (match('='))
-                    addToken(TokenType.NOT_EQUAL_TO, currentColumnNumber - 1);
-                break;
 
             // > and >= operators
             case '>':

@@ -53,7 +53,7 @@ public class Interpreter implements Expr.Visitor<Object>
         switch (operator.type)
         {
         
-            // == and != operators
+            // equal? and nequal? operators
             case EQUAL_TO: 
                 return isEqual(first, second);
             case NOT_EQUAL_TO:
