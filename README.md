@@ -29,7 +29,7 @@ expression       -> equality
 equality         -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
-unary            -> ("+" | "-" | "not")? (binary | literal) ;
+unary            -> ("+" | "-" | "not")? equality ;
 
 let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
 print            -> "(" ("print" | "println") equality+ ")" ;

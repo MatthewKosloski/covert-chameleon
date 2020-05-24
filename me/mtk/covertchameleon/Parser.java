@@ -190,7 +190,7 @@ public class Parser
 
      /*
      * Implements the following production rule:
-     * unary -> ("+" | "-" | "not")? (binary | literal) ;
+     * unary -> ("+" | "-" | "not")? equality ;
      *
      * @return A unary expression.
      */
@@ -199,13 +199,7 @@ public class Parser
         if (match(TokenType.PLUS, TokenType.MINUS))
         {
             Token operator = previous();
-            Expr right;
-            if (peek(TokenType.LPAREN))
-                // unary -> ("+" | "-") binary ;
-                right = binary();
-            else
-                // unary -> ("+" | "-") literal ;
-                right = literal();
+            Expr right = equality();
 
             return new Expr.Unary(operator, right);
         }
@@ -215,13 +209,7 @@ public class Parser
             nextToken();
 
             Token operator = nextToken();
-            Expr right;
-            if (peek(TokenType.LPAREN))
-                // unary -> ("+" | "-") binary ;
-                right = binary();
-            else
-                // unary -> ("+" | "-") literal ;
-                right = literal();
+            Expr right = equality();
 
             consume(TokenType.RPAREN, "Missing closing \"(\"");
             return new Expr.Unary(operator, right);
@@ -229,7 +217,7 @@ public class Parser
         else if (peek(TokenType.LPAREN))
         {
             // unary -> binary ;
-            return binary();
+            return equality();
         }
         
         // unary -> literal ;
