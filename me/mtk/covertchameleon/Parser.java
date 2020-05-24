@@ -66,29 +66,34 @@ public class Parser
     // expression -> equality | let | print ;
     private Expr expression()
     {
-        if (match(TokenType.LET))
+        if (!hasExpression())
+            throw new ParseError(peek(), "Expected an expression");
+
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
         {
+            // expression -> let ;
             System.out.println("expression -> let ;");
-            // let()
         }
-        else if (match(TokenType.LPAREN) && match(TokenType.PRINT))
+        else if (peek(TokenType.LPAREN) && peekNext(TokenType.PRINT))
         {
+            // expression -> print ;
             return print();
         }
 
-        // expression -> equality() ;
+        // expression -> equality ;
         return equality();
     }
 
     // print -> "(" "print" equality+ ")" ;
     private Expr print()
     {
+        // Consume (print
+        nextToken();
+        nextToken();
+
         List<Expr> exprs = new ArrayList<>();
 
-        while (hasExpression()))
-        {
-            exprs.add(equality());
-        }
+        while (hasExpression()) exprs.add(equality());
 
         consume(TokenType.RPAREN, "Missing closing \"(\"");
         return new Expr.Print(exprs);
@@ -382,7 +387,7 @@ public class Parser
     {
         return tokens.get(position - 1);
     }
-    
+
     /*
      * Indicates if the next token is the start of an expression.
      * 
