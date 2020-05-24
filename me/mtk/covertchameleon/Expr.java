@@ -11,6 +11,7 @@ abstract class Expr
 		T visitLiteralExpr(Literal expr);
 		T visitPrintExpr(Print expr);
 		T visitLetExpr(Let expr);
+		T visitVariableExpr(Variable expr);
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
@@ -101,5 +102,21 @@ abstract class Expr
 		{
 			return visitor.visitLetExpr(this);
 		} 
+	}
+
+	static class Variable extends Expr
+	{
+		final Token name;
+
+		public Variable(Token name)
+		{
+			this.name = name;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitVariableExpr(this);
+		}
 	}
 }

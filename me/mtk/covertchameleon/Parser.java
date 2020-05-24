@@ -228,8 +228,7 @@ public class Parser
         if (match(TokenType.NUMBER))
             return new Expr.Literal(previous().literal);
         else if (match(TokenType.IDENTIFIER))
-            // TODO: Create Identifier expression
-            return new Expr.Literal(previous().lexeme);
+            return new Expr.Variable(previous());
         else if (match(TokenType.TRUE))
             return new Expr.Literal(true);
         else if (match(TokenType.FALSE))
