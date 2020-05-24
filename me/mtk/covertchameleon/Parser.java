@@ -71,14 +71,34 @@ public class Parser
             System.out.println("expression -> let ;");
             // let()
         }
-        else if (match(TokenType.PRINT))
+        else if (match(TokenType.LPAREN) && match(TokenType.PRINT))
         {
-            System.out.println("expression -> print ;");
+            return print();
+            // System.out.println("expression -> print ;");
             // print()
         }
 
         // expression -> equality() ;
         return equality();
+    }
+
+    // print -> "(" "print" equality+ ")" ;
+    private Expr print()
+    {
+        List<Expr> exprs = new ArrayList<>();
+
+        while (peek(
+            TokenType.LPAREN, TokenType.NUMBER, 
+            TokenType.MINUS, TokenType.PLUS, 
+            TokenType.TRUE, TokenType.FALSE,
+            TokenType.NULL, TokenType.IDENTIFIER
+        ))
+        {
+            exprs.add(equality());
+        }
+
+        consume(TokenType.RPAREN, "Missing closing \"(\"");
+        return new Expr.Print(exprs);
     }
 
     // equality -> "(" ("==" | "!=") comparison comparison+ ")" ;
