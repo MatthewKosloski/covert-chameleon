@@ -74,8 +74,6 @@ public class Parser
         else if (match(TokenType.LPAREN) && match(TokenType.PRINT))
         {
             return print();
-            // System.out.println("expression -> print ;");
-            // print()
         }
 
         // expression -> equality() ;
@@ -87,12 +85,7 @@ public class Parser
     {
         List<Expr> exprs = new ArrayList<>();
 
-        while (peek(
-            TokenType.LPAREN, TokenType.NUMBER, 
-            TokenType.MINUS, TokenType.PLUS, 
-            TokenType.TRUE, TokenType.FALSE,
-            TokenType.NULL, TokenType.IDENTIFIER
-        ))
+        while (hasExpression()))
         {
             exprs.add(equality());
         }
@@ -115,13 +108,7 @@ public class Parser
             Expr second = comparison();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            // TODO: Refactor condition
-            while (peek(
-                TokenType.LPAREN, TokenType.NUMBER, 
-                TokenType.MINUS, TokenType.PLUS, 
-                TokenType.TRUE, TokenType.FALSE,
-                TokenType.NULL, TokenType.IDENTIFIER
-            ))
+            while (hasExpression())
             {
                 second = comparison();
                 expr = new Expr.Binary(operator, expr, second);
@@ -149,13 +136,7 @@ public class Parser
             Expr second = binary();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            // TODO: Refactor condition
-            while (peek(
-                TokenType.LPAREN, TokenType.NUMBER, 
-                TokenType.MINUS, TokenType.PLUS, 
-                TokenType.TRUE, TokenType.FALSE,
-                TokenType.NULL, TokenType.IDENTIFIER
-            ))
+            while (hasExpression())
             {
                 second = binary();
                 expr = new Expr.Binary(operator, expr, second);
@@ -187,13 +168,7 @@ public class Parser
             Expr second = unary();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            // TODO: Refactor condition
-            while (peek(
-                TokenType.LPAREN, TokenType.NUMBER, 
-                TokenType.MINUS, TokenType.PLUS, 
-                TokenType.TRUE, TokenType.FALSE,
-                TokenType.NULL, TokenType.IDENTIFIER
-            ))
+            while (hasExpression())
             {
                 second = unary();
                 expr = new Expr.Binary(operator, expr, second);
@@ -412,5 +387,21 @@ public class Parser
     {
         return (operator.type == TokenType.PLUS || operator.type == TokenType.MINUS ||
             operator.type == TokenType.STAR || operator.type == TokenType.SLASH);
+    }
+
+    /*
+     * Indicates if the next token is the start of an expression.
+     * 
+     * @return True if the next token is the start of an expression; 
+     * False otherwise.
+     */
+    private boolean hasExpression()
+    {
+        return peek(
+            TokenType.LPAREN, TokenType.NUMBER, 
+            TokenType.MINUS, TokenType.PLUS, 
+            TokenType.TRUE, TokenType.FALSE,
+            TokenType.NULL, TokenType.IDENTIFIER
+        );
     }
 }
