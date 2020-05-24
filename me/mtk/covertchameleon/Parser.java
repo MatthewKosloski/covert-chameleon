@@ -382,13 +382,7 @@ public class Parser
     {
         return tokens.get(position - 1);
     }
-
-    private boolean isValidBinaryOperator(Token operator)
-    {
-        return (operator.type == TokenType.PLUS || operator.type == TokenType.MINUS ||
-            operator.type == TokenType.STAR || operator.type == TokenType.SLASH);
-    }
-
+    
     /*
      * Indicates if the next token is the start of an expression.
      * 
