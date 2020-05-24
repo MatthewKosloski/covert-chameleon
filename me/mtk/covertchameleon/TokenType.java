@@ -7,6 +7,9 @@ enum TokenType
 
     // Binary arithmetic tokens
     PLUS, MINUS, STAR,
+
+    // Unary logical negation operator
+    NOT,
     
     // Comment and binary division token
     SLASH,
@@ -23,7 +26,7 @@ enum TokenType
     // Let expression
     LET,
 
-    // == and != operators
+    // equal? and nequal? operators
     EQUAL_TO, NOT_EQUAL_TO,
 
     // > and >= operators

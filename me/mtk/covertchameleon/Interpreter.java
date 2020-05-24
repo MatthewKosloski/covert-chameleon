@@ -113,10 +113,18 @@ public class Interpreter implements Expr.Visitor<Object>
         Token operator = expr.operator;
         Object right = evaluate(expr.right);
 
-        if (operator.type == TokenType.MINUS)
-            return - (double) right;
-        else
-            return (double) right;
+        switch (operator.type)
+        {
+            case MINUS:
+                validateNumberOperand(operator, right);
+                return - (double) right;
+            case NOT:
+                // validateBooleanOperand(operator, right);
+                return !isTruthy(right);
+            default:
+                validateNumberOperand(operator, right);
+                return (double) right;
+        }
     }
 
     @Override
@@ -135,6 +143,20 @@ public class Interpreter implements Expr.Visitor<Object>
     private Object evaluate(Expr expr)
     {
         return expr.accept(this);
+    }
+
+    private void validateNumberOperand(Token operator, Object operand)
+    {
+        if (operand instanceof Double) return;
+        throw new RuntimeError(operator, String.format("Expected number " + 
+            "after unary operator \"%s\"", operator.lexeme));
+    }
+
+    private void validateBooleanOperand(Token operator, Object operand)
+    {
+        if (operand instanceof Boolean) return;
+        throw new RuntimeError(operator, String.format("Expected boolean " + 
+            "after unary operator \"%s\"", operator.lexeme));
     }
 
     /*

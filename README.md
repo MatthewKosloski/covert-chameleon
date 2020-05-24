@@ -29,7 +29,7 @@ expression       -> equality
 equality         -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
-unary            -> ("+" | "-")? (binary | literal) ;
+unary            -> ("+" | "-" | "not")? (binary | literal) ;
 
 let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
 print            -> "(" ("print" | "println") equality+ ")" ;
@@ -42,3 +42,5 @@ number           -> [0-9]+ "." [0-9]+ | [0-9]+ ;
 identifier       -> [a-zA-Z_$] [a-zA-Z_$0-9?]* ;
 boolean          -> ("true" | "false") ;
 ```
+
+_Note: The `print` expression ought to be removed in favor of one or more standard library functions (when the standard library gets introduced)._
