@@ -13,7 +13,7 @@ public class CovertChameleon
 
     // An instance of an interpreter. Is static final
     // because it is to be reused to store programa state.
-    // static final Interpreter interpreter = new Interpreter();
+    static final Interpreter interpreter = new Interpreter();
 
     // Indicates if there is a known error
     // and prevents the execution of the code.
@@ -63,9 +63,25 @@ public class CovertChameleon
     {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.getTokens();
-        Parser parser = new Parser(tokens);
-        List<Expr> expressions = parser.parse();
-        System.out.println("Done");
+
+        try
+        {
+            Parser parser = new Parser(tokens);
+            List<Expr> expressions = parser.parse();
+            interpreter.interpret(expressions);
+        }
+        catch (ParseError err)
+        {
+            String line = lexer.getLine(err.getToken().line);
+            displayErrorMessage(err, line);
+            hadError = true;
+        }
+        catch (RuntimeError err)
+        {
+            String line = lexer.getLine(err.getToken().line);
+            displayErrorMessage(err, line);
+            hadRuntimeError = true;
+        }
     }
 
     /*
