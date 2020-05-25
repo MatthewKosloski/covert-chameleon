@@ -59,7 +59,8 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
-    public Object visitBindingExpr(Expr.Binding expr) {
+    public Void visitBindingExpr(Expr.Binding expr)
+    {
         return null;
     }
 
