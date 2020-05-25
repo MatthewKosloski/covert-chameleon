@@ -6,7 +6,7 @@ enum TokenType
     LPAREN, RPAREN, LBRACKET, RBRACKET,
 
     // Binary arithmetic tokens
-    PLUS, MINUS, STAR,
+    PLUS, MINUS, STAR, PERCENT,
 
     // Unary logical negation operator
     NOT,

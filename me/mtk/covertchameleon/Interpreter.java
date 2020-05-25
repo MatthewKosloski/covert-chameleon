@@ -120,7 +120,10 @@ public class Interpreter implements Expr.Visitor<Object>
                     throw new RuntimeError(operator, "Cannot divide by 0");
                 else
                     return (double) first / (double) second;
-
+            case PERCENT:
+                validateNumberOperands(operator, first, second);
+                return (double) first % (double) second;
+ 
             // >, >=, <, <= operators
             // These operators only work on number and string types.
             // TODO: Compare strings lexicographically

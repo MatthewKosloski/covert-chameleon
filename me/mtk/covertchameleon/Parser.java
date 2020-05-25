@@ -203,14 +203,14 @@ public class Parser
 
     /*
      * Implements the following production rule:
-     * binary -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
+     * binary -> "(" ("+" | "-" | "*" | "/" | "%") unary unary+ ")" ;
      *
      * @return A binary expression.
      */
     private Expr binary()
     {
         if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, TokenType.MINUS,
-            TokenType.STAR, TokenType.SLASH))
+            TokenType.STAR, TokenType.SLASH, TokenType.PERCENT))
         {
             // Consume (
             nextToken();
@@ -260,7 +260,7 @@ public class Parser
             return new Expr.Unary(operator, right);
         }
         else if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
-            TokenType.MINUS, TokenType.STAR, TokenType.SLASH))
+            TokenType.MINUS, TokenType.STAR, TokenType.SLASH, TokenType.PERCENT))
         {
             // unary -> binary ;
             return equality();
