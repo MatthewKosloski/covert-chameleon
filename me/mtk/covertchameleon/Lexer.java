@@ -340,7 +340,7 @@ public class Lexer
      */
     private void consumeBlockComment()
     {
-        while (!match('`', '`')) nextChar();
+        while (!match('`', '`') && !isEndOfFile()) nextChar();
     }
 
     /*
