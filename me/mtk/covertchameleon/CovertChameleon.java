@@ -68,6 +68,7 @@ public class CovertChameleon
         {
             Parser parser = new Parser(tokens);
             List<Expr> expressions = parser.parse();
+            System.out.print("");
             interpreter.interpret(expressions);
         }
         catch (ParseError err)
