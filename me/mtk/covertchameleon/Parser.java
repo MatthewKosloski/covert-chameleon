@@ -2,6 +2,8 @@ package me.mtk.covertchameleon;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 // The Parser is the part of the interpreter that takes
 // a list of Token objects as input and, from those tokens, 
@@ -63,7 +65,7 @@ public class Parser
         return expressions;
     }
 
-    // expression -> equality | let | print ;
+    // expression -> equality | let | print | "(" expression+ ")" ;
     private Expr expression()
     {
         if (!hasExpression())
@@ -72,7 +74,7 @@ public class Parser
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
         {
             // expression -> let ;
-            System.out.println("expression -> let ;");
+            return let();
         }
         else if (peek(TokenType.LPAREN) && 
             peekNext(TokenType.PRINT, TokenType.PRINTLN))
@@ -83,6 +85,65 @@ public class Parser
 
         // expression -> equality ;
         return equality();
+    }
+
+    // let -> "(" "let" identifier_init_list (expression | expression_group) ")" ;
+    private Expr let()
+    {
+        // Consume (let
+        nextToken();
+        nextToken();
+
+        // identifier_init_list
+        consume(TokenType.LBRACKET, "Expected a '[' to start the identifier " + 
+            "initialization list");
+
+        Map<Token, Expr> bindings = new HashMap<>();
+        while (!match(TokenType.RBRACKET) && hasTokens())
+        {
+            if (peek(TokenType.RPAREN))
+            {
+                throw new ParseError(peek(), "Expected either a ']' to " +
+                    "terminate the identifier initialization list or an " + 
+                    "identifier followed by an expression");
+            }
+
+            consume(TokenType.IDENTIFIER, "Expected an identifier");
+            Token identifier = previous();
+            Expr value = equality();
+            bindings.put(identifier, value);
+        }
+
+        Expr body = null;
+
+        // (expression | expression_group)
+
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.LPAREN))
+        {
+            // expression_group
+
+            // Consume (
+            nextToken();
+
+            List<Expr> exprs = new ArrayList<>();
+
+            while (hasExpression() && hasTokens())
+                exprs.add(expression());
+            
+            body = new Expr.Group(exprs);
+
+            consume(TokenType.RPAREN, "Missing closing ')'");
+        }
+        else if (peek(TokenType.LPAREN)) 
+        {
+            body = expression();
+        }
+
+        consume(TokenType.RPAREN, "Missing closing ')'");
+
+        System.out.print("");
+
+        return null;
     }
 
     // print -> "(" ("print" | "println") equality+ ")" ;
@@ -97,7 +158,7 @@ public class Parser
 
         while (hasExpression()) exprs.add(equality());
 
-        consume(TokenType.RPAREN, "Missing closing \"(\"");
+        consume(TokenType.RPAREN, "Missing closing ')'");
         return new Expr.Print(operator, exprs);
     }
 
@@ -121,7 +182,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            consume(TokenType.RPAREN, "Missing closing ')'");
             return expr;
         }
 
@@ -149,7 +210,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            consume(TokenType.RPAREN, "Missing closing ')'");
             return expr;
         }
 
@@ -181,7 +242,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            consume(TokenType.RPAREN, "Missing closing ')'");
             return expr;
         }
 
@@ -190,7 +251,7 @@ public class Parser
 
      /*
      * Implements the following production rule:
-     * unary -> ("+" | "-" | "not")? equality ;
+     * unary -> ("+" | "-" | "not")? equality | literal ;
      *
      * @return A unary expression.
      */
@@ -211,10 +272,11 @@ public class Parser
             Token operator = nextToken();
             Expr right = equality();
 
-            consume(TokenType.RPAREN, "Missing closing \"(\"");
+            consume(TokenType.RPAREN, "Missing closing ')'");
             return new Expr.Unary(operator, right);
         }
-        else if (peek(TokenType.LPAREN))
+        else if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
+            TokenType.MINUS, TokenType.STAR, TokenType.SLASH))
         {
             // unary -> binary ;
             return equality();
@@ -224,24 +286,31 @@ public class Parser
         return literal();
     }
 
-    /*
-     * Implements the following production rule:
-     * literal -> number | identifier | boolean | "null" ;
-     *
-     * @return A number expression.
-     */
+    // literal -> number | identifier | boolean | "null" ;
     private Expr literal()
     {
         if (match(TokenType.NUMBER))
+            // literal -> number ;
             return new Expr.Literal(previous().literal);
         else if (match(TokenType.IDENTIFIER))
+            // literal -> identifier ;
             return new Expr.Variable(previous());
         else if (match(TokenType.TRUE))
+            // literal -> boolean ;
             return new Expr.Literal(true);
         else if (match(TokenType.FALSE))
+            // literal -> boolean ;
             return new Expr.Literal(false);
         else if (match(TokenType.NULL))
+            // literal -> "null" ;
             return new Expr.Literal(null);
+
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.IDENTIFIER) 
+            || peek(TokenType.IDENTIFIER))
+        {
+            throw new ParseError(peekNext(), String.format(
+                "Undefined identifier '%s'", peekNext().lexeme));
+        } 
 
         throw new ParseError(peek(), "Expected an expression");
     }
