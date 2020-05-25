@@ -158,6 +158,7 @@ public class Lexer
             case '-': addToken(TokenType.MINUS); break;
             case '*': addToken(TokenType.STAR); break;
             case '%': addToken(TokenType.PERCENT); break;
+            case ';': consumeInlineComment(); break;
 
             // > and >= operators
             case '>':
@@ -181,15 +182,16 @@ public class Lexer
                     addToken(TokenType.LESS_THAN);
             break;
 
-            // Comments and binary division operator
+            // Binary division operators
             case '/': 
-                if (match('/')) 
-                    consumeInlineComment();
-                else if (match('*')) 
-                    consumeBlockComment();
-                else 
+                // if (match('/')) 
+                    // TODO: integer division
+                // else 
                     addToken(TokenType.SLASH);
                 break;
+            
+            case '`':
+                if (match('`')) consumeBlockComment(); break;
 
             default:
                 if (isDigit(currentChar))
@@ -333,12 +335,12 @@ public class Lexer
     }
 
     /*
-     * Consumes a C-style block comment, silently advancing the position
+     * Consumes a block comment, silently advancing the position
      * in the source program.
      */
     private void consumeBlockComment()
     {
-        while (!match('*', '/')) nextChar();
+        while (!match('`', '`')) nextChar();
     }
 
     /*
