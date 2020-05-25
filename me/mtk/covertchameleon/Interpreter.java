@@ -28,6 +28,9 @@ public class Interpreter implements Expr.Visitor<Object>
     public Object visitGroupExpr(Expr.Group expr) {return null;}
 
     @Override
+    public Object visitBindingExpr(Expr.Binding expr) {return null;}
+
+    @Override
     public Object visitPrintExpr(Expr.Print expr) 
     {
         for (Expr e : expr.exprs)
