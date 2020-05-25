@@ -12,6 +12,7 @@ abstract class Expr
 		T visitLiteralExpr(Literal expr);
 		T visitPrintExpr(Print expr);
 		T visitLetExpr(Let expr);
+		T visitBindingExpr(Binding expr);
 		T visitVariableExpr(Variable expr);
 	}
 
@@ -107,12 +108,12 @@ abstract class Expr
 
 	static class Let extends Expr
 	{
-		final Scope scope;
+		final List<Binding> bindings;
 		final Expr body;
 
-		public Let(Scope scope, Expr body)
+		public Let(List<Binding> bindings, Expr body)
 		{
-			this.scope = scope;
+			this.bindings = bindings;
 			this.body = body;
 		}
 
@@ -120,6 +121,24 @@ abstract class Expr
 		public <T> T accept(Visitor<T> visitor)
 		{
 			return visitor.visitLetExpr(this);
+		} 
+	}
+
+	static class Binding extends Expr
+	{
+		final Token identifier;
+		final Expr value;
+
+		public Binding(Token identifier, Expr value)
+		{
+			this.identifier = identifier;
+			this.value = value;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitBindingExpr(this);
 		} 
 	}
 
