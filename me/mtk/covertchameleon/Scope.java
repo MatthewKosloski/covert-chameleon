@@ -42,11 +42,18 @@ public class Scope
     public Object get(Token identifier) 
     {
         if (values.containsKey(identifier.lexeme))
+            // The identifier is defined within the local scope
             return values.get(identifier.lexeme);
-
-        throw new RuntimeError(identifier, 
-            String.format("Undefined identifier %s", identifier.lexeme));
+        else if (parent != null)
+        {
+            // Traverse up the scope chain to find the identifier
+            return parent.get(identifier);
+        }
+        else
+        {
+            // The identifier is not defined anywhere
+            throw new RuntimeError(identifier, 
+                String.format("Undefined identifier %s", identifier.lexeme));
+        }
     }
-
-
 }
