@@ -65,12 +65,9 @@ public class Parser
         return expressions;
     }
 
-    // expression -> equality | let | print | "(" expression+ ")" ;
+    // expression -> equality | let | print ;
     private Expr expression()
     {
-        if (!hasExpression())
-            throw new ParseError(peek(), "Expected an expression");
-
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
         {
             // expression -> let ;
@@ -87,18 +84,18 @@ public class Parser
         return equality();
     }
 
-    // let -> "(" "let" identifier_init_list (expression | expression_group) ")" ;
+    // let -> "(" "let" bindings body ")" ;
     private Expr let()
     {
         // Consume (let
         nextToken();
         nextToken();
 
-        // identifier_init_list
+        // bindings -> "[" binding+ "]" ;
         consume(TokenType.LBRACKET, "Expected a '[' to start the identifier " + 
             "initialization list");
 
-        Map<Token, Expr> bindings = new HashMap<>();
+        List<Expr.Binding> bindings = new ArrayList<>();
         while (!match(TokenType.RBRACKET) && hasTokens())
         {
             if (peek(TokenType.RPAREN))
@@ -111,16 +108,15 @@ public class Parser
             consume(TokenType.IDENTIFIER, "Expected an identifier");
             Token identifier = previous();
             Expr value = equality();
-            bindings.put(identifier, value);
+            bindings.add(new Expr.Binding(identifier, value));
         }
 
+        // body -> expression | expression_group ;
         Expr body = null;
-
-        // (expression | expression_group)
 
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LPAREN))
         {
-            // expression_group
+            // expression_group -> "(" expression+ ")" ;
 
             // Consume (
             nextToken();
@@ -136,6 +132,7 @@ public class Parser
         }
         else if (peek(TokenType.LPAREN)) 
         {
+            // expression
             body = expression();
         }
 
@@ -143,7 +140,7 @@ public class Parser
 
         System.out.print("");
 
-        return null;
+        return new Expr.Let(bindings, body);
     }
 
     // print -> "(" ("print" | "println") equality+ ")" ;
