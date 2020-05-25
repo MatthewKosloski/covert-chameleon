@@ -20,27 +20,31 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 `Parser.java` implements the following grammar that describes the language's syntax:
 
 ```
-program          -> expression* EOF ;
+program               -> expression* EOF ;
 
-expression       -> equality 
-                 | let 
-                 | print ;
+expression            -> equality 
+                      | let 
+                      | print ;
 
-equality         -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
-comparison       -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
-binary           -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
-unary            -> ("+" | "-" | "not")? equality ;
+expression_group      -> "(" expression+ ")" ;
 
-let              -> "(" "let" "[" (identifier equality)* "]" equality* ")" ;
-print            -> "(" ("print" | "println") equality+ ")" ;
+equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
+comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
+binary                -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
+unary                 -> ("+" | "-" | "not")? equality | literal ;
 
-literal          -> number | identifier 
-                 | boolean 
-                 | "null" ;
+let                   -> "(" "let" identifier_init_list (expression | expression_group) ")" ;
+identifier_init_list  -> "[" (identifier equality)+ "]" ;
 
-number           -> [0-9]+ "." [0-9]+ | [0-9]+ ;
-identifier       -> [a-zA-Z_$] [a-zA-Z_$0-9?]* ;
-boolean          -> ("true" | "false") ;
+print                 -> "(" ("print" | "println") equality+ ")" ;
+
+literal               -> number | identifier 
+                      | boolean 
+                      | "null" ;
+
+number                -> [0-9]+ "." [0-9]+ | [0-9]+ ;
+identifier            -> [a-zA-Z_$] [a-zA-Z_$0-9?]* ;
+boolean               -> ("true" | "false") ;
 ```
 
 _Note: The `print` expression ought to be removed in favor of one or more standard library functions (when the standard library gets introduced)._
