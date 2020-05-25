@@ -42,8 +42,14 @@ literal               -> number | identifier
                       | boolean 
                       | "null" ;
 
-number                -> [0-9]+ "." [0-9]+ | [0-9]+ ;
-identifier            -> [a-zA-Z_$] [a-zA-Z_$0-9?]* ;
+number                -> float | integer ;
+float                 -> [0-9]+ "." [0-9]+ ;
+integer               -> [0-9]+ ;
+
+identifier            -> initial subsequent* ;
+initial               -> [a-zA-Z_$] ;
+subsequent            -> initial | [0-9?] ;
+
 boolean               -> ("true" | "false") ;
 ```
 
