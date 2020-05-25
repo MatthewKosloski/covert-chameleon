@@ -29,16 +29,17 @@ public class Interpreter implements Expr.Visitor<Object>
     {
         Scope local = new Scope(scope);
 
-        // populate local scope with bindings
-        for (Expr.Binding binding : expr.bindings)
-            local.define(binding.identifier.lexeme, evaluate(binding.value));
-
         // cache global scope to be restored later
         Scope global = scope;
 
         try
         {
             scope = local;
+
+             // populate local scope with bindings
+            for (Expr.Binding binding : expr.bindings)
+                local.define(binding.identifier.lexeme, evaluate(binding.value));
+            
             evaluate(expr.body);
         }
         finally
