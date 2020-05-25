@@ -209,8 +209,7 @@ public class Parser
      */
     private Expr binary()
     {
-        if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, TokenType.MINUS,
-            TokenType.STAR, TokenType.SLASH, TokenType.PERCENT))
+        if (hasBinaryExpression())
         {
             // Consume (
             nextToken();
@@ -259,8 +258,7 @@ public class Parser
             consume(TokenType.RPAREN, "Missing closing ')'");
             return new Expr.Unary(operator, right);
         }
-        else if (peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
-            TokenType.MINUS, TokenType.STAR, TokenType.SLASH, TokenType.PERCENT))
+        else if (hasBinaryExpression())
         {
             // unary -> binary ;
             return equality();
@@ -462,5 +460,18 @@ public class Parser
             TokenType.TRUE, TokenType.FALSE,
             TokenType.NULL, TokenType.IDENTIFIER
         );
+    }
+
+    /*
+     * Indicates if the next expression is a binary arithmetic expression.
+     *  
+     * @return True if the next expression is a binary arithmetic expression;
+     * False otherwise.
+     */
+    private boolean hasBinaryExpression()
+    {
+        return peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
+            TokenType.MINUS, TokenType.STAR, TokenType.SLASH,
+            TokenType.PERCENT);
     }
 }
