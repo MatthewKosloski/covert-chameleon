@@ -33,8 +33,10 @@ comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ;
 binary                -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
 unary                 -> ("+" | "-" | "not")? equality | literal ;
 
-let                   -> "(" "let" identifier_init_list (expression | expression_group) ")" ;
-identifier_init_list  -> "[" (identifier equality)+ "]" ;
+let                   -> "(" "let" bindings body ")" ;
+bindings              -> "[" binding+ "]" ;
+binding               -> identifier equality ;
+body                  -> expression | expression_group ;
 
 print                 -> "(" ("print" | "println") equality+ ")" ;
 
