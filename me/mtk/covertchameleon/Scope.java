@@ -53,7 +53,7 @@ public class Scope
         {
             // The identifier is not defined anywhere
             throw new RuntimeError(identifier, 
-                String.format("Undefined identifier %s", identifier.lexeme));
+                String.format("Undefined identifier '%s'", identifier.lexeme));
         }
     }
 }
