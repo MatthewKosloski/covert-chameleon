@@ -1,4 +1,6 @@
-(let [x 4 y (+ 2 3)] (
-    (print x)
-    (println y)
-))
+// prints 1\n2\n3
+(let [x (/ 4 4) y (* 1 2)]
+    (let [z (+ x y)]
+        (println x y z)
+    )
+)

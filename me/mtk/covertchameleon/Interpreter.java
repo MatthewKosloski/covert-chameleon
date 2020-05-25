@@ -25,7 +25,37 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
-    public Object visitBodyExpr(Expr.Body expr) {return null;}
+    public Void visitLetExpr(Expr.Let expr)
+    {
+        Scope local = new Scope(scope);
+
+        // populate local scope with bindings
+        for (Expr.Binding binding : expr.bindings)
+            local.define(binding.identifier.lexeme, evaluate(binding.value));
+
+        // cache global scope to be restored later
+        Scope global = scope;
+
+        try
+        {
+            scope = local;
+            evaluate(expr.body);
+        }
+        finally
+        {
+            // restore global scope
+            scope = global;
+        }
+
+        return null;
+    }
+
+    @Override
+    public Void visitBodyExpr(Expr.Body body) 
+    {
+        for (Expr expr : body.exprs) evaluate(expr);
+        return null;
+    }
 
     @Override
     public Object visitBindingExpr(Expr.Binding expr) {
@@ -33,7 +63,7 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
-    public Object visitPrintExpr(Expr.Print expr) 
+    public Void visitPrintExpr(Expr.Print expr) 
     {
         for (Expr e : expr.exprs)
         {
@@ -42,22 +72,15 @@ public class Interpreter implements Expr.Visitor<Object>
                 System.out.println(value);
             else
                 System.out.print(value);
-
         }
         
         return null;
     }
 
     @Override
-    public Object visitLetExpr(Expr.Let expr)
-    {
-        return null;
-    }
-
-    @Override
     public Object visitVariableExpr(Expr.Variable expr)
     {
-        return null;
+        return scope.get(expr.name);
     }
 
     @Override
