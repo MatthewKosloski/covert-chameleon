@@ -184,9 +184,11 @@ public class Lexer
 
             // Binary division operators
             case '/': 
-                // if (match('/')) 
-                    // TODO: integer division
-                // else 
+                if (match('/')) 
+                    // integer (floor) division operator
+                    addToken(TokenType.SLASHSLASH);
+                else 
+                    // division operator
                     addToken(TokenType.SLASH);
                 break;
             

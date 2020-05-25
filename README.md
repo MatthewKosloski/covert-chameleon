@@ -28,7 +28,7 @@ expression            -> equality
 
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
-binary                -> "(" ("+" | "-" | "*" | "/" | "%") unary unary+ ")" ;
+binary                -> "(" ("+" | "-" | "*" | "/" | "//" | "%") unary unary+ ")" ;
 unary                 -> ("+" | "-" | "not")? equality | literal ;
 
 let                   -> "(" "let" bindings body ")" ;

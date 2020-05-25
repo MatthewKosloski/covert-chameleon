@@ -203,7 +203,7 @@ public class Parser
 
     /*
      * Implements the following production rule:
-     * binary -> "(" ("+" | "-" | "*" | "/" | "%") unary unary+ ")" ;
+     * binary -> "(" ("+" | "-" | "*" | "/" | "//" | "%") unary unary+ ")" ;
      *
      * @return A binary expression.
      */
@@ -472,6 +472,6 @@ public class Parser
     {
         return peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
             TokenType.MINUS, TokenType.STAR, TokenType.SLASH,
-            TokenType.PERCENT);
+            TokenType.PERCENT, TokenType.SLASHSLASH);
     }
 }
