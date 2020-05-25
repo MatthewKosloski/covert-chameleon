@@ -25,10 +25,12 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
-    public Object visitGroupExpr(Expr.Group expr) {return null;}
+    public Object visitBodyExpr(Expr.Body expr) {return null;}
 
     @Override
-    public Object visitBindingExpr(Expr.Binding expr) {return null;}
+    public Object visitBindingExpr(Expr.Binding expr) {
+        return null;
+    }
 
     @Override
     public Object visitPrintExpr(Expr.Print expr) 

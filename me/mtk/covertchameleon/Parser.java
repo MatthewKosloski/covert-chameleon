@@ -92,7 +92,7 @@ public class Parser
         nextToken();
 
         // bindings -> "[" binding+ "]" ;
-        consume(TokenType.LBRACKET, "Expected a '[' to start the identifier " + 
+        consume(TokenType.LBRACKET, "Expected a '[' to start the identifier " +
             "initialization list");
 
         List<Expr.Binding> bindings = new ArrayList<>();
@@ -110,37 +110,24 @@ public class Parser
             Expr value = equality();
             bindings.add(new Expr.Binding(identifier, value));
         }
-
-        // body -> expression | expression_group ;
-        Expr body = null;
-
-        if (peek(TokenType.LPAREN) && peekNext(TokenType.LPAREN))
+        
+        if (!peek(TokenType.RPAREN))
         {
-            // expression_group -> "(" expression+ ")" ;
-
-            // Consume (
-            nextToken();
+            // body -> expression+ ;
 
             List<Expr> exprs = new ArrayList<>();
 
             while (hasExpression() && hasTokens())
                 exprs.add(expression());
             
-            body = new Expr.Group(exprs);
+            Expr.Body body = new Expr.Body(exprs);
 
-            consume(TokenType.RPAREN, "Missing closing ')'");
-        }
-        else if (peek(TokenType.LPAREN)) 
-        {
-            // expression
-            body = expression();
+            consume(TokenType.RPAREN, "Missing closing ')'");    
+            return new Expr.Let(bindings, body);
         }
 
-        consume(TokenType.RPAREN, "Missing closing ')'");
-
-        System.out.print("");
-
-        return new Expr.Let(bindings, body);
+        throw new ParseError(peek(), 
+            "Expected a body of one or more expressions");
     }
 
     // print -> "(" ("print" | "println") equality+ ")" ;

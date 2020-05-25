@@ -26,8 +26,6 @@ expression            -> equality
                       | let 
                       | print ;
 
-expression_group      -> "(" expression+ ")" ;
-
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary                -> "(" ("+" | "-" | "*" | "/") unary unary+ ")" ;
@@ -36,7 +34,7 @@ unary                 -> ("+" | "-" | "not")? equality | literal ;
 let                   -> "(" "let" bindings body ")" ;
 bindings              -> "[" binding+ "]" ;
 binding               -> identifier equality ;
-body                  -> expression | expression_group ;
+body                  -> expression+ ;
 
 print                 -> "(" ("print" | "println") equality+ ")" ;
 

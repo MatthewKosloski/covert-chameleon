@@ -6,7 +6,7 @@ abstract class Expr
 {
 	interface Visitor<T>
 	{
-		T visitGroupExpr(Group expr);
+		T visitBodyExpr(Body expr);
 		T visitBinaryExpr(Binary expr);
 		T visitUnaryExpr(Unary expr);
 		T visitLiteralExpr(Literal expr);
@@ -18,11 +18,11 @@ abstract class Expr
 
 	abstract <T> T accept(Visitor<T> visitor);
 
-	static class Group extends Expr
+	static class Body extends Expr
 	{
 		final List<Expr> exprs;
 
-		public Group(List<Expr> exprs)
+		public Body(List<Expr> exprs)
 		{
 			this.exprs = exprs;
 		}
@@ -30,7 +30,7 @@ abstract class Expr
 		@Override
 		public <T> T accept(Visitor<T> visitor)
 		{
-			return visitor.visitGroupExpr(this);
+			return visitor.visitBodyExpr(this);
 		}
 	}
 
