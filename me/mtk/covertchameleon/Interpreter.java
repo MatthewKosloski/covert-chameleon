@@ -9,6 +9,8 @@ import java.util.List;
 public class Interpreter implements Expr.Visitor<Object>
 {
 
+    private Scope scope = new Scope(null);
+
     /**
      * Interprets the source program by walking, or traversing,
      * the given AST in post-order. 
@@ -21,6 +23,9 @@ public class Interpreter implements Expr.Visitor<Object>
         for (Expr expr : expressions)
             evaluate(expr);
     }
+
+    @Override
+    public Object visitGroupExpr(Expr.Group expr) {return null;}
 
     @Override
     public Object visitPrintExpr(Expr.Print expr) 

@@ -6,6 +6,7 @@ abstract class Expr
 {
 	interface Visitor<T>
 	{
+		T visitGroupExpr(Group expr);
 		T visitBinaryExpr(Binary expr);
 		T visitUnaryExpr(Unary expr);
 		T visitLiteralExpr(Literal expr);
@@ -15,6 +16,22 @@ abstract class Expr
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
+
+	static class Group extends Expr
+	{
+		final List<Expr> exprs;
+
+		public Group(List<Expr> exprs)
+		{
+			this.exprs = exprs;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitGroupExpr(this);
+		}
+	}
 
 	static class Binary extends Expr
 	{
@@ -91,12 +108,12 @@ abstract class Expr
 	static class Let extends Expr
 	{
 		final Scope scope;
-		final List<Expr> exprs;
+		final Expr body;
 
-		public Let(Scope scope, List<Expr> exprs)
+		public Let(Scope scope, Expr body)
 		{
 			this.scope = scope;
-			this.exprs = exprs;
+			this.body = body;
 		}
 
 		@Override
