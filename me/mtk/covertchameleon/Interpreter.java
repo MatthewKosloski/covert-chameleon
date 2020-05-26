@@ -165,6 +165,8 @@ public class Interpreter implements Expr.Visitor<Object>
             case NOT:
                 // validateBooleanOperand(operator, right);
                 return !isTruthy(right);
+            case TRUE_PREDICATE:
+                return isTruthy(right);
             default:
                 validateNumberOperand(operator, right);
                 return (double) right;

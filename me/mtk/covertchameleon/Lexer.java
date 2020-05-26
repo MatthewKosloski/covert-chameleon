@@ -76,6 +76,7 @@ public class Lexer
         keywords.put("not", TokenType.NOT);
         keywords.put("equal?", TokenType.EQUAL_PREDICATE);
         keywords.put("nequal?", TokenType.NEQUAL_PREDICATE);
+        keywords.put("true?", TokenType.TRUE_PREDICATE);
     }
 
     /**

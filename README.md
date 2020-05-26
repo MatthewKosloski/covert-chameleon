@@ -29,7 +29,7 @@ expression            -> equality
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary                -> "(" ("+" | "-" | "*" | "/" | "//" | "%") unary unary+ ")" ;
-unary                 -> ("+" | "-" | "not")? equality | literal ;
+unary                 -> ("+" | "-" | "not" | "true?") equality | literal ;
 
 let                   -> "(" "let" bindings body ")" ;
 bindings              -> "[" binding+ "]" ;
@@ -53,4 +53,81 @@ subsequent            -> initial | [0-9?] ;
 boolean               -> ("true" | "false") ;
 ```
 
-_Note: The `print` expression ought to be removed in favor of one or more standard library functions (when the standard library gets introduced)._
+_Note: The `print` expressions and the `true?` predicate ought to be removed in favor of one or more standard library functions (when the standard library gets introduced)._
+
+## Code Examples
+
+```
+; This is an inline comment
+
+; These
+; are 
+; multiple
+; inline
+; comments !!!
+
+``This is a
+    multi-line block comment :)``
+
+;; Most expressions, except for literals and some
+;; unary expressions, are enclosed in a pair of
+;; parentheses. See the above grammar for a list
+;; of literals. Every parenthesized expression
+;; can take a variable number of expressions
+;; as "arguments."
+
+;; Use the print(ln) expressions to send evaluated
+;; expressions to the standard output stream:
+
+(print 1)
+;=> 1
+(print 1 2)
+;=> 12
+(println 1 2 3)
+;=> 1
+;   2
+;   3
+
+;; Negate the truthiness of an expression using
+;; the unary `not` operator.
+
+(println (not true))
+;=> false
+(println (not 0))
+;=> true
+
+;; Check the truthiness of an expression using 
+;; the true? predicate. The only expressions
+;; that evaluate to false are: false, 0, and
+;; null.
+
+(println (true? 1))
+;=> true
+(println (true? 0))
+;=> false
+
+;; It should be noted that the true? predicate is
+;; a short-hand for a double `not`.
+
+(println (not (not true)))
+;=> true
+
+;; Check if two or more expressions are equal using the 
+;; equal? predicate.
+
+(print (equal? 1 1))
+;=> true
+
+(print (equal? 1 1 2))
+;=> false
+
+(print (equal? 1 1))
+;=> true
+
+;; Perform comparisons on expressions that evaluate to 
+;; numbersu sing relational operators such as >, >=, 
+;; <, and <=.
+
+(println (> 1 0))
+;=> true
+```

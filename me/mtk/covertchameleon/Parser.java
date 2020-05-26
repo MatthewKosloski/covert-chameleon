@@ -155,7 +155,7 @@ public class Parser
         if (peek(TokenType.LPAREN) && peekNext(TokenType.EQUAL_PREDICATE,
             TokenType.NEQUAL_PREDICATE))
         {
-            // Consume (
+            // Consume ( 
             nextToken();
 
             Token operator = nextToken();
@@ -250,7 +250,8 @@ public class Parser
 
             return new Expr.Unary(operator, right);
         }
-        else if (peek(TokenType.LPAREN) && peekNext(TokenType.NOT))
+        else if (peek(TokenType.LPAREN) && peekNext(TokenType.NOT, 
+            TokenType.TRUE_PREDICATE))
         {
             // Consume (
             nextToken();

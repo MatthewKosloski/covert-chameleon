@@ -26,6 +26,9 @@ enum TokenType
     // equal? and nequal? operators
     EQUAL_PREDICATE, NEQUAL_PREDICATE,
 
+    // true? operator
+    TRUE_PREDICATE,
+
     // > and >= operators
     GREATER_THAN, GREATER_THAN_OR_EQUAL_TO,
 
