@@ -146,14 +146,14 @@ public class CovertChameleon
 
         // Print out line of code with the error
         System.out.format("\nLn %d, Col %d>\n", lineNumber, columnNumber);
-        System.out.format("\t%s\n", line);
+        System.out.format("\t\"%s\"\n", line);
         
         // Underline part of the line with the error
-        String columnPointer = "";
-        for(int i = 0; i < columnNumber - 1; i++) columnPointer += " ";
+        String underline = "";
+        for(int i = 0; i < columnNumber; i++) underline += " ";
         
         for(int i = columnNumber; i < columnNumber + token.lexeme.length(); i++)
-            columnPointer += "^";
-        System.out.format("\t%s\n", columnPointer);
+            underline += "^";
+        System.out.format("\t%s\n", underline);
     }
 }
