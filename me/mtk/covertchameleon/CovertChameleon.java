@@ -125,9 +125,14 @@ public class CovertChameleon
         }
     }
 
-    private static void displayErrorMessage(String errorName, String message, String line, 
-        int lineNumber, int columnNumber)
+    private static void displayErrorMessage(InterpreterError err, String line)
     {
+        Token token = err.getToken();
+        String errorName = err.getErrorName();
+        String message = err.getMessage();
+        int lineNumber = token.line;
+        int columnNumber = token.column;
+
         if(isInteractive)
         {
             System.err.format("%s on column %d: %s\n", errorName, 
@@ -138,18 +143,17 @@ public class CovertChameleon
             System.err.format("%s:%d:%d: %s: %s\n", filename, lineNumber, 
                 columnNumber, errorName, message);
         }
-        System.out.format("\t%s\n", line);
-        String columnPointer = "";
-        for(int i = 0; i < columnNumber - 1; i++)
-            columnPointer += " ";
-        columnPointer += "^";
-        System.out.format("\t%s\n", columnPointer);
-    }
 
-    private static void displayErrorMessage(InterpreterError err, String line)
-    {
-        Token token = err.getToken();
-        displayErrorMessage(err.getErrorName(), err.getMessage(), line,
-            token.line, token.column);
+        // Print out line of code with the error
+        System.out.format("\nLn %d, Col %d>\n", lineNumber, columnNumber);
+        System.out.format("\t%s\n", line);
+        
+        // Underline part of the line with the error
+        String columnPointer = "";
+        for(int i = 0; i < columnNumber - 1; i++) columnPointer += " ";
+        
+        for(int i = columnNumber; i < columnNumber + token.lexeme.length(); i++)
+            columnPointer += "^";
+        System.out.format("\t%s\n", columnPointer);
     }
 }
