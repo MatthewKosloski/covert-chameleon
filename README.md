@@ -19,13 +19,13 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 
 What has and has not (but will) be implemented:
 
-- [ x ] Let expression
-- [  ] Control flow
-- [ x ] Relational operators
-- [  ] Logical operators
-- [ x ] Boolean data types
-- [ x ] `null` data type
-- [ x ] `print` expressions
+- [x] Let expression
+- [ ] Control flow
+- [x] Relational operators
+- [ ] Logical operators
+- [x] Boolean data types
+- [x] `null` data type
+- [x] `print` expressions
 
 ## Grammar
 
