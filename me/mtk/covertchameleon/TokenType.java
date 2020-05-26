@@ -24,7 +24,7 @@ enum TokenType
     LET,
 
     // equal? and nequal? operators
-    EQUAL_TO, NOT_EQUAL_TO,
+    EQUAL_PREDICATE, NEQUAL_PREDICATE,
 
     // > and >= operators
     GREATER_THAN, GREATER_THAN_OR_EQUAL_TO,

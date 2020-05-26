@@ -152,8 +152,8 @@ public class Parser
     // equality -> "(" ("==" | "!=") comparison comparison+ ")" ;
     private Expr equality()
     {
-        if (peek(TokenType.LPAREN) && peekNext(TokenType.EQUAL_TO,
-            TokenType.NOT_EQUAL_TO))
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.EQUAL_PREDICATE,
+            TokenType.NEQUAL_PREDICATE))
         {
             // Consume (
             nextToken();

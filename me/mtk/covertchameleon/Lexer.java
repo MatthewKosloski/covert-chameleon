@@ -74,8 +74,8 @@ public class Lexer
         keywords.put("false", TokenType.FALSE);
         keywords.put("null", TokenType.NULL);
         keywords.put("not", TokenType.NOT);
-        keywords.put("equal?", TokenType.EQUAL_TO);
-        keywords.put("nequal?", TokenType.NOT_EQUAL_TO);
+        keywords.put("equal?", TokenType.EQUAL_PREDICATE);
+        keywords.put("nequal?", TokenType.NEQUAL_PREDICATE);
     }
 
     /**

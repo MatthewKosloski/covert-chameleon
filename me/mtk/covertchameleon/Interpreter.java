@@ -96,9 +96,9 @@ public class Interpreter implements Expr.Visitor<Object>
         {
         
             // equal? and nequal? operators
-            case EQUAL_TO: 
+            case EQUAL_PREDICATE: 
                 return isEqual(first, second);
-            case NOT_EQUAL_TO:
+            case NEQUAL_PREDICATE:
                 return !isEqual(first, second);
 
             // +, -, *, / operators
