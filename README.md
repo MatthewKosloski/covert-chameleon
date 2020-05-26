@@ -10,10 +10,22 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 
 - A `let` expression that creates a lexical scope and binds values to identifiers within the scope
 - Control flow structures (if-else, for-loop, and while-loop) 
-- Relational (e.g, `>=`) and logical (e.g., `==`) operators
+- Relational (e.g, `>=`) and logical (e.g., `==`, 'or', 'and') operators
 - Boolean data types (`true` and `false`)
 - Null data type (`null`)
 - `print` and `println` expressions for sending output to the standard output stream
+
+## Checklist
+
+What has and has not (but will) be implemented:
+
+- [ x ] Let expression
+- [  ] Control flow
+- [ x ] Relational operators
+- [  ] Logical operators
+- [ x ] Boolean data types
+- [ x ] `null` data type
+- [ x ] `print` expressions
 
 ## Grammar
 
