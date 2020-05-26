@@ -125,7 +125,7 @@ public class Parser
             
             Expr.Body body = new Expr.Body(exprs);
 
-            consume(TokenType.RPAREN, "Missing closing ')'");    
+            consumeRightParen();    
             return new Expr.Let(bindings, body);
         }
 
@@ -145,7 +145,7 @@ public class Parser
 
         while (hasExpression()) exprs.add(equality());
 
-        consume(TokenType.RPAREN, "Missing closing ')'");
+        consumeRightParen();
         return new Expr.Print(operator, exprs);
     }
 
@@ -169,7 +169,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing ')'");
+            consumeRightParen();
             return expr;
         }
 
@@ -197,7 +197,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing ')'");
+            consumeRightParen();
             return expr;
         }
 
@@ -228,7 +228,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consume(TokenType.RPAREN, "Missing closing ')'");
+            consumeRightParen();
             return expr;
         }
 
@@ -259,7 +259,7 @@ public class Parser
             Token operator = nextToken();
             Expr right = equality();
 
-            consume(TokenType.RPAREN, "Missing closing ')'");
+            consumeRightParen();
             return new Expr.Unary(operator, right);
         }
         else if (hasBinaryExpression())
@@ -485,5 +485,15 @@ public class Parser
         return peek(TokenType.LPAREN) && peekNext(TokenType.PLUS, 
             TokenType.MINUS, TokenType.STAR, TokenType.SLASH,
             TokenType.PERCENT, TokenType.SLASHSLASH);
+    }
+
+    /**
+     * If the next token is a right parenthesis, it is consumed. Else,
+     * a ParseError is thrown.
+     */
+    private void consumeRightParen()
+    {
+        consume(TokenType.RPAREN, String.format("Expected a closing " +
+            " ')' but got '%s' instead", peek().lexeme));
     }
 }
