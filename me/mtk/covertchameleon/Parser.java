@@ -92,8 +92,11 @@ public class Parser
         nextToken();
 
         // bindings -> "[" binding+ "]" ;
-        consume(TokenType.LBRACKET, "Expected a '[' to start the identifier " +
-            "initialization list");
+        consume(TokenType.LBRACKET, String.format("Expected a '[' to start the " + 
+            "identifier initialization list but got '%s' instead", peek().lexeme));
+
+        if (peek().type != TokenType.IDENTIFIER)
+            throw new ParseError(peek(), "Expected an identifier after '['");
 
         List<Expr.Binding> bindings = new ArrayList<>();
         while (!match(TokenType.RBRACKET) && hasTokens())
@@ -293,15 +296,16 @@ public class Parser
             throw new ParseError(peekNext(), String.format(
                 "Undefined identifier '%s'", peekNext().lexeme));
         } 
-        else if (peek().type == TokenType.UNIDENTIFIED)
+        else if (peek(TokenType.UNIDENTIFIED))
         {
             throw new ParseError(peek(), 
                 String.format("Bad token '%s'", peek().lexeme));
         }
-        else
-        {
-            throw new ParseError(peek(), "Expected an expression");
-        }
+
+        throw new ParseError(peek(), String.format("Expected one of the " +
+            "following but got '%s' instead:\n * An expression starting " + 
+            "with '('\n * A unary expression starting with '+' or '-'\n * " + 
+            "Number\n * Identifier\n * Boolean \n * null", peek().lexeme));
     }
 
     /*
