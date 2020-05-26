@@ -486,6 +486,6 @@ public class Lexer
      */
     private boolean isPartOfIdentifier(char c)
     {
-        return isStartOfIdentifier(c) || isDigit(c) || c == '?';
+        return isStartOfIdentifier(c) || isDigit(c) || c == '?' || c == '-';
     }
 }

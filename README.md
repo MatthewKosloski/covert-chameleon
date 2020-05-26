@@ -60,7 +60,7 @@ integer               -> [0-9]+ ;
 
 identifier            -> initial subsequent* ;
 initial               -> [a-zA-Z_$] ;
-subsequent            -> initial | [0-9?] ;
+subsequent            -> initial | [0-9?-] ;
 
 boolean               -> ("true" | "false") ;
 ```
