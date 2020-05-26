@@ -91,9 +91,9 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 ;; Negate the truthiness of an expression using
 ;; the unary `not` operator.
 
-(println (not true))
+(print (not true))
 ;=> false
-(println (not 0))
+(print (not 0))
 ;=> true
 
 ;; Check the truthiness of an expression using 
@@ -101,9 +101,9 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 ;; that evaluate to false are: false, 0, and
 ;; null.
 
-(println (true? 1))
+(print (true? 1))
 ;=> true
-(println (true? 0))
+(print (true? 0))
 ;=> false
 
 ;; It should be noted that the true? predicate is
@@ -117,17 +117,108 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 
 (print (equal? 1 1))
 ;=> true
-
 (print (equal? 1 1 2))
 ;=> false
-
 (print (equal? 1 1))
 ;=> true
+(print (equal? 2 2 2))
+;=> false
+
+;; The previous expression evaluates to false because
+;; the equal? predicate is analagous to the binary
+;; equality operator `==` and has left associativity.
+;; That is, the operands are evaluated from left to right.
+;; In the aforementioned expression, (equal? 2 2) is 
+;; evaluated first, and then the value (true) is 
+;; compared to 2 in (equal? true 2), which of 
+;; course is false.
 
 ;; Perform comparisons on expressions that evaluate to 
-;; numbersu sing relational operators such as >, >=, 
-;; <, and <=.
+;; numbers using relational operators such as >, >=, 
+;; <, and <=. That is, the operands to relational 
+;; operators _must_ be numbers.
 
-(println (> 1 0))
+(print (> 1 0))
 ;=> true
+(print (> 3 2 1))
+;=>program.in:1:9: RuntimeError: Binary operator ">" only operates on numbers
+;=>
+;=>Ln 1, Col 9>
+;=>        "(print (> 3 2 1))"
+;=>                 ^
+
+;; Simiarly to the equal? predicate, relational operators
+;; have left associativity and thus evaluation is performed
+;; from left to right.
+
+;; Binary arithmetic can be performed on expressions that
+;; evaluate to numbers using the following operators:
+;;     + (addition)
+;;     - (subtraction)
+;;     * (multiplication)
+;;     / (division)
+;;    // (integer floor division)
+;;     % (modulus)
+
+(print (+ 1 2 3))
+;=> 6
+(print (- 10 (+ 2 3)))
+;=> 5
+(print (/ 22 8))
+;=> 2.75
+(print (// 22 8))
+;=> 2
+(print (% 10 3))
+;=> 1
+
+;; If the denominator of an arithmetic expression
+;; evaluates to 0, then an RuntimeError occurs.
+
+(print (/ 5 (+ 999 -999)))
+;=> program.in:1:9: RuntimeError: Cannot divide by 0
+;=>
+;=> Ln 1, Col 9>
+;=>         "(print (/ 5 (+ 999 -999)))"
+;=>                  ^
+
+;; In addition to unary `not`, which negates
+;; the truthiness of the expression, there are
+;; two other unary operators '+' and '-'.
+
+(print (+ 1 2 -3))
+;=> 0
+(print -(* +1 +5))
+;=> -5
+
+;; To create a lexical scope, use the `let`
+;; expression. Refer to the above grammar
+;; for the formal syntax and to determine
+;; which characters are valid for identifiers.
+
+(let [x 1] (print x))
+;=> 1
+(let [x 1 y (+ 1 x)] (println x y))
+;=> 1
+;   2
+
+;; Nested scopes can also be created.
+
+(let [a -1 b -2]
+    (println a)
+    (let [a 999 b b]
+        (println a b)))
+;=> -1
+;=> 999
+;=> -2
+
+;; Attempting to refer to an identifier
+;; that doesn't exist causes a RuntimeError.
+
+(let [a 100] (println b))
+;=> program.in:1:23: RuntimeError: Undefined identifier 'b'
+;=>
+;=> Ln 1, Col 23>
+;=>        "(let [a 100] (println b))"
+;=>                               ^
+
 ```
