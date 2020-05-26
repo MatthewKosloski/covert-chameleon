@@ -13,7 +13,7 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 - Relational (e.g, `>=`) and logical (e.g., `==`) operators
 - Boolean data types (`true` and `false`)
 - Null data type (`null`)
-- `print` expression for sending output to the standard output stream
+- `print` and `println` expressions for sending output to the standard output stream
 
 ## Grammar
 
