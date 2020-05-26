@@ -293,8 +293,15 @@ public class Parser
             throw new ParseError(peekNext(), String.format(
                 "Undefined identifier '%s'", peekNext().lexeme));
         } 
-
-        throw new ParseError(peek(), "Expected an expression");
+        else if (peek().type == TokenType.UNIDENTIFIED)
+        {
+            throw new ParseError(peek(), 
+                String.format("Bad token '%s'", peek().lexeme));
+        }
+        else
+        {
+            throw new ParseError(peek(), "Expected an expression");
+        }
     }
 
     /*
