@@ -1,6 +1,6 @@
 # covert-chameleon
 
-In my quest to understand how interpeters for high-level programming languages work, I decided to make my own functional programming language called Torrey.
+In my quest to understand how interpeters for high-level programming languages work, I decided to make my own functional programming language called Torrey.  The language is inspired by [Scheme](https://www.scheme.com/tspl4/) and [Clojure](https://clojure.org/index).
 
 Instead of building it all in one go (which would be too overwhelming), I decided to break it up into iterations.  Each iteration will be an independent interpreter that is more complex than the last.
 
