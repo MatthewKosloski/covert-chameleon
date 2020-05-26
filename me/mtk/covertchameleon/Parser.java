@@ -127,7 +127,7 @@ public class Parser
         }
 
         throw new ParseError(peek(), 
-            "Expected a body of one or more expressions");
+            "Expected a body of one or more expressions after the closing ']'");
     }
 
     // print -> "(" ("print" | "println") equality+ ")" ;
