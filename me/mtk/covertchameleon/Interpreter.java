@@ -115,17 +115,19 @@ public class Interpreter implements Expr.Visitor<Object>
                 validateNumberOperands(operator, first, second);
                 return (double) first * (double) second;
             case SLASH:
-                validateNumberOperands(operator, first, second);
-                if ((double) second == 0)
-                    throw new RuntimeError(operator, "Cannot divide by 0");
-                else
-                    return (double) first / (double) second;
             case SLASHSLASH:
                 validateNumberOperands(operator, first, second);
-                if ((double) second == 0)
-                    throw new RuntimeError(operator, "Cannot divide by 0");
-                else
-                    return Math.floor((double) first / (double) second);
+
+                if ((double) second != 0)
+                {
+                    double quotient = (double) first / (double) second;
+                    if (operator.type == TokenType.SLASHSLASH)
+                        return Math.floor(quotient);
+                    else
+                        return quotient;
+                }
+
+                throwDivisionByZeroException(operator);
             case PERCENT:
                 validateNumberOperands(operator, first, second);
                 return (double) first % (double) second;
@@ -279,5 +281,17 @@ public class Interpreter implements Expr.Visitor<Object>
         if (a == null || b == null) return false;
 
         return a.equals(b);
+    }
+
+    /*
+     * Throws a RuntimeError with a message indicating an 
+     * attempt to divide by zero.
+     * 
+     * @param operator The division operator token
+     * @throws RuntimeError
+     */
+    private void throwDivisionByZeroException(Token operator)
+    {
+        throw new RuntimeError(operator, "Cannot divide by zero");
     }
 }
