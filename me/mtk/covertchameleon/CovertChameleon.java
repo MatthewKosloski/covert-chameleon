@@ -133,7 +133,7 @@ public class CovertChameleon
         int lineNumber = token.line;
         int columnNumber = token.column;
 
-        if(isInteractive)
+        if (isInteractive)
         {
             System.err.format("%s on column %d: %s\n", errorName, 
                 columnNumber, message);
@@ -150,9 +150,9 @@ public class CovertChameleon
         
         // Underline part of the line with the error
         String underline = "";
-        for(int i = 0; i < columnNumber; i++) underline += " ";
+        for (int i = 0; i < columnNumber; i++) underline += " ";
         
-        for(int i = columnNumber; i < columnNumber + token.lexeme.length(); i++)
+        for (int i = columnNumber; i < columnNumber + token.lexeme.length(); i++)
             underline += "^";
         System.out.format("\t%s\n", underline);
     }
