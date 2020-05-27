@@ -127,7 +127,7 @@ public class Interpreter implements Expr.Visitor<Object>
                         return quotient;
                 }
 
-                throwDivisionByZeroException(operator);
+                throw new RuntimeError(operator, "Cannot divide by zero");
             case PERCENT:
                 validateNumberOperands(operator, first, second);
                 return (double) first % (double) second;
@@ -281,17 +281,5 @@ public class Interpreter implements Expr.Visitor<Object>
         if (a == null || b == null) return false;
 
         return a.equals(b);
-    }
-
-    /*
-     * Throws a RuntimeError with a message indicating an 
-     * attempt to divide by zero.
-     * 
-     * @param operator The division operator token
-     * @throws RuntimeError
-     */
-    private void throwDivisionByZeroException(Token operator)
-    {
-        throw new RuntimeError(operator, "Cannot divide by zero");
     }
 }
