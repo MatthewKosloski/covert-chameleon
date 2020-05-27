@@ -36,7 +36,11 @@ program               -> expression* EOF ;
 
 expression            -> equality 
                       | let 
-                      | print ;
+                      | print 
+                      | if 
+                      | then
+                      | else
+                      | cond ;
 
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
@@ -49,6 +53,13 @@ binding               -> identifier equality ;
 body                  -> expression+ ;
 
 print                 -> "(" ("print" | "println") equality+ ")" ;
+
+if                    -> "(" "if" equality then else? ")" ;
+then                  -> "(" "then" body ")" ;
+else                  -> "(" "else" body ")" ;
+
+cond                  -> "(" "cond" clause+ else? ")" ;
+clause                -> "(" equality body ")" ;
 
 literal               -> number | identifier 
                       | boolean 
