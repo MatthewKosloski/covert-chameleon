@@ -263,7 +263,8 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 ;;
 ;; <test> ? <consequent> : <alternative>;
 ;;
-;; Here is the equivalent syntax for this language:
+;; The `if` expression is analagous to the
+;; aformentioned pseudocode:
 ;;
 ;; (if <test>
 ;;     (then <consequent>) 
@@ -295,4 +296,36 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
                 (// 6 2)
                 100))))
 ;;=> 100
+
+;; Consider the following syntax:
+;;
+;; if {} else if {} else {}
+;;
+;; The `cond` expression is analagous to the
+;; aformentioned pseudocode:
+;;
+(println
+    (let [x 999]
+        (cond
+            ((equal? x 2) 2)
+            ((equal? x 4) 4)
+            ((equal? x 6) 6)
+            (else -1)
+        )))
+;;=> -1
+
+;; As with the `if` expression,
+;; the `else` expression is optional
+;; and the last expression of the taken
+;; branch is returned.
+
+(println 
+    (let [x true]
+        (cond
+            ((true? x)
+                (+ 4 5)
+                (* 8 8))
+        )))
+;;=> 64
+
 ```
