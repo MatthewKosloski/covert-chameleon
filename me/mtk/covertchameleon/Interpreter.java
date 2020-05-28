@@ -36,9 +36,8 @@ public class Interpreter implements Expr.Visitor<Object>
         {
             scope = local;
 
-             // populate local scope with bindings
             for (Expr.Binding binding : expr.bindings)
-                local.define(binding.identifier.lexeme, evaluate(binding.value));
+                evaluate(binding);
             
             return evaluate(expr.body);
         }
@@ -67,6 +66,7 @@ public class Interpreter implements Expr.Visitor<Object>
     @Override
     public Void visitBindingExpr(Expr.Binding expr)
     {
+        scope.define(expr.identifier.lexeme, evaluate(expr.value));
         return null;
     }
 
