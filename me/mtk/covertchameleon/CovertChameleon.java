@@ -144,16 +144,35 @@ public class CovertChameleon
                 columnNumber, errorName, message);
         }
 
+        int offset = countLeadingWhitespace(line);
+
         // Print out line of code with the error
         System.out.format("\nLn %d, Col %d>\n", lineNumber, columnNumber);
-        System.out.format("\t\"%s\"\n", line);
+        System.out.format("\t\"%s\"\n", line.trim());
         
         // Underline part of the line with the error
         String underline = "";
-        for (int i = 0; i < columnNumber; i++) underline += " ";
+        for (int i = 0; i < columnNumber - offset; i++) underline += " ";
         
         for (int i = columnNumber; i < columnNumber + token.lexeme.length(); i++)
             underline += "^";
         System.out.format("\t%s\n", underline);
+    }
+
+    /*
+     * Returns the number of leading white space characters
+     * in the provided string.
+     * 
+     * @param str A string
+     * @return The number of leading white space characters
+     * in str.
+     */
+    private static int countLeadingWhitespace(String str)
+    {
+        int count = 0;
+        while (Character.isWhitespace(str.charAt(count)))
+            count++;
+        
+        return count;
     }
 }
