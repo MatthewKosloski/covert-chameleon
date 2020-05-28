@@ -143,7 +143,7 @@ public class Parser
 
         List<Expr> exprs = new ArrayList<>();
 
-        while (hasExpression()) exprs.add(equality());
+        while (hasExpression()) exprs.add(expression());
 
         consumeRightParen();
         return new Expr.Print(operator, exprs);

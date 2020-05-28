@@ -52,7 +52,7 @@ bindings              -> "[" binding+ "]" ;
 binding               -> identifier equality ;
 body                  -> expression+ ;
 
-print                 -> "(" ("print" | "println") equality+ ")" ;
+print                 -> "(" ("print" | "println") body")" ;
 
 if                    -> "(" "if" equality then else? ")" ;
 then                  -> "(" "then" body ")" ;
