@@ -244,16 +244,19 @@ public class Parser
 
      /*
      * Implements the following production rule:
-     * unary -> ("+" | "-" | "not")? equality | literal ;
+     * unary -> ("+" | "-" | "not")? expression | literal ;
      *
      * @return A unary expression.
      */
     private Expr unary()
     {
-        if (match(TokenType.PLUS, TokenType.MINUS))
+        // TODO: Make sure next token is the start of
+        // or is an expression
+        if (peek(TokenType.PLUS, TokenType.MINUS) && !peekNext(TokenType.PLUS,
+            TokenType.MINUS))
         {
-            Token operator = previous();
-            Expr right = equality();
+            Token operator = nextToken();
+            Expr right = expression();
 
             return new Expr.Unary(operator, right);
         }
@@ -264,7 +267,7 @@ public class Parser
             nextToken();
 
             Token operator = nextToken();
-            Expr right = equality();
+            Expr right = expression();
 
             consumeRightParen(operator.lexeme);
             return new Expr.Unary(operator, right);
@@ -272,7 +275,7 @@ public class Parser
         else if (hasBinaryExpression())
         {
             // unary -> binary ;
-            return equality();
+            return expression();
         }
         
         // unary -> literal ;
@@ -298,16 +301,21 @@ public class Parser
             // literal -> "null" ;
             return new Expr.Literal(null);
 
-        if (peek(TokenType.LPAREN) && peekNext(TokenType.IDENTIFIER) 
-            || peek(TokenType.IDENTIFIER))
+        if (peek(TokenType.IDENTIFIER))
         {
-            throw new ParseError(peekNext(), String.format(
-                "Undefined identifier '%s'", peekNext().lexeme));
+            throwUndefinedIdentifierException(peek());
+        }
+        else if (peekNext(TokenType.IDENTIFIER))
+        {
+            throwUndefinedIdentifierException(peekNext());
         } 
         else if (peek(TokenType.UNIDENTIFIED))
         {
-            throw new ParseError(peek(), 
-                String.format("Bad token '%s'", peek().lexeme));
+            throwBadTokenException(peek());
+        }
+        else if (peekNext(TokenType.UNIDENTIFIED))
+        {
+            throwBadTokenException(peekNext());
         }
 
         throw new ParseError(peek(), String.format("Expected one of the " +
@@ -466,15 +474,32 @@ public class Parser
     }
 
     /*
-     * Indicates if the next token is an expression or the start
-     * of an expression.
+     * Indicates if the first token of lookahead is an expression or
+     * the start of an expression.
      * 
-     * @return True if the next token is the start of an expression; 
-     * False otherwise.
+     * @return True if the first token of lookahead is an expression
+     * or the start of an expression; False otherwise.
      */
     private boolean peekExpr()
     {
         return peek(
+            TokenType.LPAREN, TokenType.NUMBER, 
+            TokenType.MINUS, TokenType.PLUS, 
+            TokenType.TRUE, TokenType.FALSE,
+            TokenType.NULL, TokenType.IDENTIFIER
+        );
+    }
+
+    /*
+     * Indicates if the second token of lookahead is an expression or
+     * the start of an expression.
+     * 
+     * @return True if the second token of lookahead is an expression
+     * or the start of an expression; False otherwise.
+     */
+    private boolean peekNextExpr()
+    {
+        return peekNext(
             TokenType.LPAREN, TokenType.NUMBER, 
             TokenType.MINUS, TokenType.PLUS, 
             TokenType.TRUE, TokenType.FALSE,
@@ -503,5 +528,31 @@ public class Parser
     {
         consume(TokenType.RPAREN, String.format("Expression '%s' is missing " + 
             " a closing ')'", exprName));
+    }
+
+    /*
+     * Throws a ParseError with a message indicating
+     * a bad token.
+     *  
+     * @param token The bad token.
+     * @throws ParseError
+     */
+    private void throwBadTokenException(Token token)
+    {
+        throw new ParseError(token, String.format("Bad token '%s'", 
+            token.lexeme));
+    }
+
+    /*
+     * Throws a ParseError with a message indicating
+     * an undefined identifier.
+     *  
+     * @param token The undefined identifier.
+     * @throws ParseError
+     */
+    private void throwUndefinedIdentifierException(Token token)
+    {
+        throw new ParseError(token, String.format("Undefined identifier '%s'",
+            token.lexeme));
     }
 }

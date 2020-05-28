@@ -45,7 +45,7 @@ expression            -> equality
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
 binary                -> "(" ("+" | "-" | "*" | "/" | "//" | "%") unary unary+ ")" ;
-unary                 -> ("+" | "-" | "not" | "true?") equality | literal ;
+unary                 -> ("+" | "-" | "not" | "true?") expression | literal ;
 
 let                   -> "(" "let" bindings body ")" ;
 bindings              -> "[" binding+ "]" ;
