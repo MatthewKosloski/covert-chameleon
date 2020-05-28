@@ -14,6 +14,7 @@ abstract class Expr
 		T visitLetExpr(Let expr);
 		T visitBindingExpr(Binding expr);
 		T visitVariableExpr(Variable expr);
+		T visitIfExpr(IfExpr expr);
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
@@ -155,6 +156,26 @@ abstract class Expr
 		public <T> T accept(Visitor<T> visitor)
 		{
 			return visitor.visitVariableExpr(this);
+		}
+	}
+
+	static class IfExpr extends Expr
+	{
+		final Expr condition;
+		final Expr thenExpr;
+		final Expr elseExpr;
+
+		public IfExpr(Expr condition, Expr thenExpr, Expr elseExpr)
+		{
+			this.condition = condition;
+			this.thenExpr = thenExpr;
+			this.elseExpr = elseExpr;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitIfExpr(this);
 		}
 	}
 }

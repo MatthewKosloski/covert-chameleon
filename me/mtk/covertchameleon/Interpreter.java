@@ -25,6 +25,19 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
+    public Object visitIfExpr(Expr.IfExpr expr)
+    {
+        Object condition = evaluate(expr.condition);
+
+        if (isTruthy(condition))
+            return evaluate(expr.thenExpr);
+        else if(expr.elseExpr != null)
+            return evaluate(expr.elseExpr);
+        
+        return null;
+    }
+
+    @Override
     public Object visitLetExpr(Expr.Let expr)
     {
         Scope local = new Scope(scope);

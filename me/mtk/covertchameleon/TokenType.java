@@ -23,6 +23,9 @@ enum TokenType
     // Let expression
     LET,
 
+    // Branching expressions
+    IF, THEN, ELSE, COND,
+
     // equal? and nequal? operators
     EQUAL_PREDICATE, NEQUAL_PREDICATE,
 

@@ -77,6 +77,10 @@ public class Lexer
         keywords.put("equal?", TokenType.EQUAL_PREDICATE);
         keywords.put("nequal?", TokenType.NEQUAL_PREDICATE);
         keywords.put("true?", TokenType.TRUE_PREDICATE);
+        keywords.put("if", TokenType.IF);
+        keywords.put("then", TokenType.THEN);
+        keywords.put("else", TokenType.ELSE);
+        keywords.put("cond", TokenType.COND);
     }
 
     /**

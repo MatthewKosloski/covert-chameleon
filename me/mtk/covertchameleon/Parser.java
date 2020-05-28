@@ -63,7 +63,10 @@ public class Parser
         return expressions;
     }
 
-    // expression -> equality | let | print ;
+    // expression -> equality 
+    //            | let 
+    //            | print 
+    //            | if 
     private Expr expression()
     {
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
@@ -77,9 +80,47 @@ public class Parser
             // expression -> print ;
             return print();
         }
+        else if (peek(TokenType.LPAREN) && peekNext(TokenType.IF))
+        {
+            // expression -> if ;
+            return ifExpr();
+        }
 
         // expression -> equality ;
         return equality();
+    }
+
+    // if -> "(" "if" expression then else? ")" ;
+    private Expr ifExpr()
+    {
+        // Consume (if
+        nextToken();
+        nextToken();
+
+        Expr cond = expression();
+
+        consume(TokenType.LPAREN, "Expected '(' to begin 'then' expression");
+        consume(TokenType.THEN, "Expected 'then' expression");
+
+        Expr thenExpr = body();
+
+        consumeRightParen("then");
+
+        Expr elseExpr = null;
+
+        if (peek(TokenType.LPAREN) && peekNext(TokenType.ELSE))
+        {
+            // Consume (else
+            nextToken();
+            nextToken();
+            
+            elseExpr = body();
+            consumeRightParen("else");
+        }
+
+        consumeRightParen("if");
+
+        return new Expr.IfExpr(cond, thenExpr, elseExpr);
     }
 
     // let -> "(" "let" bindings body ")" ;
