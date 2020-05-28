@@ -40,7 +40,9 @@ expression            -> equality
                       | if 
                       | then
                       | else
-                      | cond ;
+                      | cond 
+                      | and
+                      | or;
 
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
@@ -60,6 +62,9 @@ else                  -> "(" "else" body ")" ;
 
 cond                  -> "(" "cond" clause+ else? ")" ;
 clause                -> "(" expression body ")" ;
+
+and                   -> "(" "and" expression expression+ ")" ;
+or                    -> "(" "or" expression expression+ ")" ;
 
 literal               -> number | identifier 
                       | boolean 
