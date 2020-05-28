@@ -50,7 +50,7 @@ unary                 -> ("+" | "-" | "not" | "true?") equality | literal ;
 let                   -> "(" "let" bindings body ")" ;
 bindings              -> "[" binding+ "]" ;
 binding               -> identifier equality ;
-body                  -> expression+ ;
+body                  -> expression* ;
 
 print                 -> "(" ("print" | "println") body")" ;
 

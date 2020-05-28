@@ -122,24 +122,23 @@ public class Parser
             Expr value = equality();
             bindings.add(new Expr.Binding(identifier, value));
         }
+
+        Expr body = body();
+
+        consumeRightParen();
         
-        if (!peek(TokenType.RPAREN))
-        {
-            // body -> expression+ ;
+        return new Expr.Let(bindings, body);
+    }
 
-            List<Expr> exprs = new ArrayList<>();
+    // body -> expression* ;
+    private Expr.Body body()
+    {
+        List<Expr> exprs = new ArrayList<>();
 
-            while (peekExpr() && hasTokens())
-                exprs.add(expression());
-            
-            Expr.Body body = new Expr.Body(exprs);
-
-            consumeRightParen();    
-            return new Expr.Let(bindings, body);
-        }
-
-        throw new ParseError(peek(), 
-            "Expected a body of one or more expressions after the closing ']'");
+        while (peekExpr() && hasTokens())
+            exprs.add(expression());
+        
+        return new Expr.Body(exprs);
     }
 
     // print -> "(" ("print" | "println") equality+ ")" ;
@@ -148,14 +147,13 @@ public class Parser
         // Consume (
         nextToken();
 
+        // print or println
         Token operator = nextToken();
 
-        List<Expr> exprs = new ArrayList<>();
-
-        while (peekExpr()) exprs.add(expression());
+        Expr.Body body = body();
 
         consumeRightParen();
-        return new Expr.Print(operator, exprs);
+        return new Expr.Print(operator, body);
     }
 
     // equality -> "(" ("==" | "!=") comparison comparison+ ")" ;
