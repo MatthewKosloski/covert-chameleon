@@ -117,7 +117,7 @@ public class Parser
                 previous().lexeme, peek().lexeme));
             }
 
-            Expr value = equality();
+            Expr value = expression();
             bindings.add(new Expr.Binding(identifier, value));
         }
 

@@ -49,7 +49,7 @@ unary                 -> ("+" | "-" | "not" | "true?") expression | literal ;
 
 let                   -> "(" "let" bindings body ")" ;
 bindings              -> "[" binding+ "]" ;
-binding               -> identifier equality ;
+binding               -> identifier expression ;
 body                  -> expression* ;
 
 print                 -> "(" ("print" | "println") body")" ;
