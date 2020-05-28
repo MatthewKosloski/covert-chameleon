@@ -239,7 +239,11 @@ public class Interpreter implements Expr.Visitor<Object>
                 text = text.substring(0, text.length() - 2);
             }
             return text;
+        } else if (obj == null)
+        {
+            return "null";
         }
+        
         return obj.toString();
     }
 
