@@ -234,6 +234,15 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 ;=> 999
 ;=> -2
 
+;; The `let` expression returns the last
+;; expression of its body.
+
+(println 
+    (let [x 4]
+        (+ x 1)
+        (* x x)))
+;;=> 16
+
 ;; Attempting to refer to an identifier
 ;; that doesn't exist causes a RuntimeError.
 
@@ -244,4 +253,41 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
 ;=>        "(let [a 100] (println b))"
 ;=>                               ^
 
+;; Consider the following syntax of the 
+;; ubiquitous C-style ternary expression:
+;;
+;; <test> ? <consequent> : <alternative>;
+;;
+;; Here is the equivalent syntax for this language:
+;;
+;; (if <test>
+;;     (then <consequent>) 
+;;     (else <alternative>))
+
+(if (equal? 2 2)
+    (then
+        (println 999))
+    (else
+        (println -999)))
+;;=> 999
+
+;; The `else` expression is optional.
+
+(if 1 
+    (then (print false)))
+;;=> false
+
+;; The last expression of the taken branch
+;; is returned.
+
+(println 
+    (let [x 4]
+        (if (< x 0)
+            (then
+                (+ 1 2)
+                (* x x))
+            (else
+                (// 6 2)
+                100))))
+;;=> 100
 ```
