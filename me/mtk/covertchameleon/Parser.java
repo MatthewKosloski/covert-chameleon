@@ -114,8 +114,8 @@ public class Parser
             if (!peekExpr())
             {
                 throw new ParseError(peek(), String.format("Expected an " + 
-                "expression to be bounded to identifier '%s' but got '%s' " +
-                "instead", previous().lexeme, peek().lexeme));
+                "expression after identifier '%s' but got '%s instead",
+                previous().lexeme, peek().lexeme));
             }
 
             Expr value = equality();
