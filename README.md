@@ -54,12 +54,12 @@ body                  -> expression* ;
 
 print                 -> "(" ("print" | "println") body")" ;
 
-if                    -> "(" "if" equality then else? ")" ;
+if                    -> "(" "if" expression then else? ")" ;
 then                  -> "(" "then" body ")" ;
 else                  -> "(" "else" body ")" ;
 
 cond                  -> "(" "cond" clause+ else? ")" ;
-clause                -> "(" equality body ")" ;
+clause                -> "(" expression body ")" ;
 
 literal               -> number | identifier 
                       | boolean 
