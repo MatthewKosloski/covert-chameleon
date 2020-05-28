@@ -25,7 +25,7 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
-    public Void visitLetExpr(Expr.Let expr)
+    public Object visitLetExpr(Expr.Let expr)
     {
         Scope local = new Scope(scope);
 
@@ -40,21 +40,27 @@ public class Interpreter implements Expr.Visitor<Object>
             for (Expr.Binding binding : expr.bindings)
                 local.define(binding.identifier.lexeme, evaluate(binding.value));
             
-            evaluate(expr.body);
+            return evaluate(expr.body);
         }
         finally
         {
             // restore global scope
             scope = global;
         }
-
-        return null;
     }
 
     @Override
-    public Void visitBodyExpr(Expr.Body body) 
+    public Object visitBodyExpr(Expr.Body body) 
     {
-        for (Expr expr : body.exprs) evaluate(expr);
+        for (int i = 0; i < body.exprs.size(); i++)
+        {
+            Object evaluatedExpr = evaluate(body.exprs.get(i));
+
+            if (i == body.exprs.size() - 1)
+                // return last expression
+                return evaluatedExpr;
+        }
+
         return null;
     }
 
