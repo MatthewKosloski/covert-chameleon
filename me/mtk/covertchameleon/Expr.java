@@ -15,6 +15,8 @@ abstract class Expr
 		T visitBindingExpr(Binding expr);
 		T visitVariableExpr(Variable expr);
 		T visitIfExpr(IfExpr expr);
+		T visitCondExpr(Cond expr);
+		T visitClauseExpr(Clause expr);
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
@@ -176,6 +178,42 @@ abstract class Expr
 		public <T> T accept(Visitor<T> visitor)
 		{
 			return visitor.visitIfExpr(this);
+		}
+	}
+
+	static class Clause extends Expr
+	{
+		final Expr condition;
+		final Body body;
+
+		public Clause(Expr condition, Body body)
+		{
+			this.condition = condition;
+			this.body = body;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitClauseExpr(this);
+		}
+	}
+
+	static class Cond extends Expr
+	{
+		final List<Expr.Clause> clauses;
+		final Expr elseExpr;
+
+		public Cond(List<Expr.Clause> clauses, Expr elseExpr)
+		{
+			this.clauses = clauses;
+			this.elseExpr = elseExpr;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitCondExpr(this);
 		}
 	}
 }

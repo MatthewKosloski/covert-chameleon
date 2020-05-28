@@ -66,7 +66,8 @@ public class Parser
     // expression -> equality 
     //            | let 
     //            | print 
-    //            | if 
+    //            | if
+    //            | cond 
     private Expr expression()
     {
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
@@ -85,9 +86,61 @@ public class Parser
             // expression -> if ;
             return ifExpr();
         }
+        else if (peek(TokenType.LPAREN) && peekNext(TokenType.COND))
+        {
+            // expression -> cond ;
+            return cond();
+        }
 
         // expression -> equality ;
         return equality();
+    }
+
+    // cond -> "(" "cond" clause+ else? ")" ;
+    private Expr cond()
+    {
+        // Consume (cond
+        nextToken();
+        nextToken();
+
+        List<Expr.Clause> clauses = new ArrayList<>();
+
+        while (peekExpr() && !peekElse() && hasTokens())
+            clauses.add(clause());
+
+        Expr elseExpr = null;
+
+        if (peekElse())
+        {
+            // Consume (else
+            nextToken();
+            nextToken();
+            
+            elseExpr = body();
+            consumeRightParen("else");
+        }
+
+        consumeRightParen("cond");
+
+        return new Expr.Cond(clauses, elseExpr);
+    }
+
+    // clause -> "(" expression body ")" ;
+    private Expr.Clause clause()
+    {
+        consume(TokenType.LPAREN, 
+            "Expected a '(' to start a clause expression");
+
+        if (!peekExpr())
+            throw new ParseError(peek(), "Expected an expression");
+
+        Expr condition = expression();
+
+        Expr.Body body = body();
+
+        consumeRightParen("");
+
+        return new Expr.Clause(condition, body);
     }
 
     // if -> "(" "if" expression then else? ")" ;
@@ -108,7 +161,7 @@ public class Parser
 
         Expr elseExpr = null;
 
-        if (peek(TokenType.LPAREN) && peekNext(TokenType.ELSE))
+        if (peekElse())
         {
             // Consume (else
             nextToken();
@@ -527,6 +580,17 @@ public class Parser
             TokenType.TRUE, TokenType.FALSE,
             TokenType.NULL, TokenType.IDENTIFIER
         );
+    }
+
+    /*
+     * Indicates if the next expression is an else expression.
+     * 
+     * @return True if the next expression is an else expression;
+     * False otherwise.
+     */
+    private boolean peekElse()
+    {
+        return peek(TokenType.LPAREN) && peekNext(TokenType.ELSE);
     }
 
     /*

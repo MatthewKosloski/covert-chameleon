@@ -25,6 +25,26 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
+    public Object visitClauseExpr(Expr.Clause expr) {return null;}
+
+    @Override
+    public Object visitCondExpr(Expr.Cond expr) {
+
+        for (Expr.Clause clause : expr.clauses)
+        {
+            Object condition = evaluate(clause.condition);
+
+            if (isTruthy(condition))
+                return evaluate(clause.body);
+        }
+
+        if (expr.elseExpr != null)
+            return evaluate(expr.elseExpr);
+
+        return null;
+    }
+
+    @Override
     public Object visitIfExpr(Expr.IfExpr expr)
     {
         Object condition = evaluate(expr.condition);
