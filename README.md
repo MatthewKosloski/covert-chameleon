@@ -29,7 +29,7 @@ What has and has not (but will) be implemented:
 
 ## Grammar
 
-`Parser.java` implements the following grammar that describes the language's syntax:
+`Parser.java` implements the following grammar (written in [Extended Backus-Naur form](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)) that describes the language's syntax:
 
 ```
 program               -> expression* EOF ;
