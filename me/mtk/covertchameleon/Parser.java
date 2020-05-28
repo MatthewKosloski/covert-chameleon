@@ -114,7 +114,7 @@ public class Parser
             if (!peekExpr())
             {
                 throw new ParseError(peek(), String.format("Expected an " + 
-                "expression after identifier '%s' but got '%s instead",
+                "expression after identifier '%s' but got '%s' instead",
                 previous().lexeme, peek().lexeme));
             }
 
