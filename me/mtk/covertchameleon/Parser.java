@@ -2,8 +2,6 @@ package me.mtk.covertchameleon;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 // The Parser is the part of the interpreter that takes
 // a list of Token objects as input and, from those tokens, 
@@ -483,23 +481,6 @@ public class Parser
     private boolean peekExpr()
     {
         return peek(
-            TokenType.LPAREN, TokenType.NUMBER, 
-            TokenType.MINUS, TokenType.PLUS, 
-            TokenType.TRUE, TokenType.FALSE,
-            TokenType.NULL, TokenType.IDENTIFIER
-        );
-    }
-
-    /*
-     * Indicates if the second token of lookahead is an expression or
-     * the start of an expression.
-     * 
-     * @return True if the second token of lookahead is an expression
-     * or the start of an expression; False otherwise.
-     */
-    private boolean peekNextExpr()
-    {
-        return peekNext(
             TokenType.LPAREN, TokenType.NUMBER, 
             TokenType.MINUS, TokenType.PLUS, 
             TokenType.TRUE, TokenType.FALSE,

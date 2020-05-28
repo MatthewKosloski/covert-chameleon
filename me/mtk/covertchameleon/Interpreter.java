@@ -100,6 +100,23 @@ public class Interpreter implements Expr.Visitor<Object>
 
         switch (operator.type)
         {
+            case EOF:
+            case FALSE:
+            case IDENTIFIER:
+            case LBRACKET:
+            case LET:
+            case LPAREN:
+            case NOT:
+            case NULL:
+            case NUMBER:
+            case PRINT:
+            case PRINTLN:
+            case RBRACKET:
+            case RPAREN:
+            case TRUE:
+            case TRUE_PREDICATE:
+            case UNIDENTIFIED:
+            break;
         
             // equal? and nequal? operators
             case EQUAL_PREDICATE: 
@@ -203,13 +220,6 @@ public class Interpreter implements Expr.Visitor<Object>
     {
         if (operand instanceof Double) return;
         throw new RuntimeError(operator, String.format("Expected number " + 
-            "after unary operator \"%s\"", operator.lexeme));
-    }
-
-    private void validateBooleanOperand(Token operator, Object operand)
-    {
-        if (operand instanceof Boolean) return;
-        throw new RuntimeError(operator, String.format("Expected boolean " + 
             "after unary operator \"%s\"", operator.lexeme));
     }
 
