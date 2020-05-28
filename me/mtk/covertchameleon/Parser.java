@@ -96,7 +96,8 @@ public class Parser
             "identifier initialization list but got '%s' instead", peek().lexeme));
 
         if (!peek(TokenType.IDENTIFIER))
-            throw new ParseError(peek(), "Expected an identifier after '['");
+            throw new ParseError(peek(), String.format("Expected an identifier " +
+            "after '[' but got '%s' instead", peek().lexeme));
 
         List<Expr.Binding> bindings = new ArrayList<>();
         while (!match(TokenType.RBRACKET) && hasTokens())
