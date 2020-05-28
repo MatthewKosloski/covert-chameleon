@@ -95,7 +95,7 @@ public class Parser
         consume(TokenType.LBRACKET, String.format("Expected a '[' to start the " + 
             "identifier initialization list but got '%s' instead", peek().lexeme));
 
-        if (peek().type != TokenType.IDENTIFIER)
+        if (!peek(TokenType.IDENTIFIER))
             throw new ParseError(peek(), "Expected an identifier after '['");
 
         List<Expr.Binding> bindings = new ArrayList<>();
@@ -110,6 +110,14 @@ public class Parser
 
             consume(TokenType.IDENTIFIER, "Expected an identifier");
             Token identifier = previous();
+
+            if (!hasExpression())
+            {
+                throw new ParseError(peek(), String.format("Expected an " + 
+                "expression to be bounded to identifier '%s' but got '%s' " +
+                "instead", previous().lexeme, peek().lexeme));
+            }
+
             Expr value = equality();
             bindings.add(new Expr.Binding(identifier, value));
         }
@@ -459,7 +467,8 @@ public class Parser
     }
 
     /*
-     * Indicates if the next token is the start of an expression.
+     * Indicates if the next token is an expression or the start
+     * of an expression.
      * 
      * @return True if the next token is the start of an expression; 
      * False otherwise.
