@@ -103,9 +103,9 @@ public class Parser
         {
             if (peek(TokenType.RPAREN))
             {
-                throw new ParseError(peek(), "Expected either a ']' to " +
-                    "terminate the identifier initialization list or an " + 
-                    "identifier followed by an expression");
+                throw new ParseError(peek(), String.format("Expected a ']' to " +
+                    "end the identifier initialization list but got '%s' instead",
+                    peek().lexeme));
             }
 
             consume(TokenType.IDENTIFIER, "Expected an identifier");
