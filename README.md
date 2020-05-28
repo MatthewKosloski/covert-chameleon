@@ -9,7 +9,7 @@ Covert Chameleon is the second iteration of the Torrey interpreter, a continuati
 The interpreter has all of the functionality included in Magnetic Moose (interpretation of fully parenthesized arithmetic expressions) but adds the following:
 
 - A `let` expression that creates a lexical scope and binds values to identifiers within the scope
-- Control flow structures (if-then-else and if-elif-else)
+- Control flow structures `if` and `cond`. The former is analaguous to the C-style ternary operator `test ? consequent : alternative` and the latter is analaguous to `if {} else if {} else {}`.
 - Relational (e.g, `>=`) and logical (e.g., `==`, 'or', 'and') operators
 - Boolean data types (`true` and `false`)
 - Null data type (`null`)
