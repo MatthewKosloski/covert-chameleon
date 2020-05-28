@@ -125,7 +125,7 @@ public class Parser
 
         Expr body = body();
 
-        consumeRightParen();
+        consumeRightParen("let");
         
         return new Expr.Let(bindings, body);
     }
@@ -152,7 +152,7 @@ public class Parser
 
         Expr.Body body = body();
 
-        consumeRightParen();
+        consumeRightParen(operator.lexeme);
         return new Expr.Print(operator, body);
     }
 
@@ -176,7 +176,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consumeRightParen();
+            consumeRightParen(operator.lexeme);
             return expr;
         }
 
@@ -204,7 +204,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consumeRightParen();
+            consumeRightParen(operator.lexeme);
             return expr;
         }
 
@@ -235,7 +235,7 @@ public class Parser
                 expr = new Expr.Binary(operator, expr, second);
             }
 
-            consumeRightParen();
+            consumeRightParen(operator.lexeme);
             return expr;
         }
 
@@ -266,7 +266,7 @@ public class Parser
             Token operator = nextToken();
             Expr right = equality();
 
-            consumeRightParen();
+            consumeRightParen(operator.lexeme);
             return new Expr.Unary(operator, right);
         }
         else if (hasBinaryExpression())
@@ -499,9 +499,8 @@ public class Parser
      * If the next token is a right parenthesis, it is consumed. Else,
      * a ParseError is thrown.
      */
-    private void consumeRightParen()
+    private void consumeRightParen(String exprName)
     {
-        consume(TokenType.RPAREN, String.format("Expected a closing " +
-            " ')' but got '%s' instead", peek().lexeme));
+        consume(TokenType.RPAREN, String.format("Expression '%s' is missing a closing ')'", exprName));
     }
 }
