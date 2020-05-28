@@ -73,7 +73,7 @@ public class Interpreter implements Expr.Visitor<Object>
     @Override
     public Void visitPrintExpr(Expr.Print expr) 
     {
-        for (Expr e : expr.exprs)
+        for (Expr e : expr.body.exprs)
         {
             String value = stringify(evaluate(e));
             if (expr.operator.type == TokenType.PRINTLN)
