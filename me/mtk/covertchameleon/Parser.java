@@ -111,7 +111,7 @@ public class Parser
             consume(TokenType.IDENTIFIER, "Expected an identifier");
             Token identifier = previous();
 
-            if (!hasExpression())
+            if (!peekExpr())
             {
                 throw new ParseError(peek(), String.format("Expected an " + 
                 "expression to be bounded to identifier '%s' but got '%s' " +
@@ -128,7 +128,7 @@ public class Parser
 
             List<Expr> exprs = new ArrayList<>();
 
-            while (hasExpression() && hasTokens())
+            while (peekExpr() && hasTokens())
                 exprs.add(expression());
             
             Expr.Body body = new Expr.Body(exprs);
@@ -151,7 +151,7 @@ public class Parser
 
         List<Expr> exprs = new ArrayList<>();
 
-        while (hasExpression()) exprs.add(expression());
+        while (peekExpr()) exprs.add(expression());
 
         consumeRightParen();
         return new Expr.Print(operator, exprs);
@@ -171,7 +171,7 @@ public class Parser
             Expr second = comparison();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            while (hasExpression())
+            while (peekExpr())
             {
                 second = comparison();
                 expr = new Expr.Binary(operator, expr, second);
@@ -199,7 +199,7 @@ public class Parser
             Expr second = binary();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            while (hasExpression())
+            while (peekExpr())
             {
                 second = binary();
                 expr = new Expr.Binary(operator, expr, second);
@@ -230,7 +230,7 @@ public class Parser
             Expr second = unary();
             Expr expr = new Expr.Binary(operator, first, second);
 
-            while (hasExpression())
+            while (peekExpr())
             {
                 second = unary();
                 expr = new Expr.Binary(operator, expr, second);
@@ -473,7 +473,7 @@ public class Parser
      * @return True if the next token is the start of an expression; 
      * False otherwise.
      */
-    private boolean hasExpression()
+    private boolean peekExpr()
     {
         return peek(
             TokenType.LPAREN, TokenType.NUMBER, 
