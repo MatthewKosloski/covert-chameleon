@@ -501,6 +501,7 @@ public class Parser
      */
     private void consumeRightParen(String exprName)
     {
-        consume(TokenType.RPAREN, String.format("Expression '%s' is missing a closing ')'", exprName));
+        consume(TokenType.RPAREN, String.format("Expression '%s' is missing " + 
+            " a closing ')'", exprName));
     }
 }
