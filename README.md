@@ -326,4 +326,27 @@ _Note: The `print` expressions and the `true?` predicate ought to be removed in 
         )))
 ;;=> 64
 
+;; Use the logical operators `and` and `or
+;; to perform short-circuit evaluation of 
+;; two or more operands.
+
+;; The `and` expression returns the first
+;; operand that has a truthy value of `false` or
+;; the last operand if every previous operand has
+;; a truthy value of `true`.
+
+(println (and 3 2 1 0 -1))
+;;=> 0
+(println (and 1 true 3))
+;;=> 3
+
+;; The `or` expression returns the first
+;; operand that has a truthy value of `true` or
+;; the last expression if every previous operand 
+;; has a truthy value of `false`.
+
+(println (or false null 0 100 false))
+;;=> 100
+(println (or false null 0))
+;;=> 0
 ```
