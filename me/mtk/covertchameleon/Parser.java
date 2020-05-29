@@ -68,6 +68,7 @@ public class Parser
     //            | print 
     //            | if
     //            | cond 
+    //            | logical ;
     private Expr expression()
     {
         if (peek(TokenType.LPAREN) && peekNext(TokenType.LET))
@@ -91,9 +92,35 @@ public class Parser
             // expression -> cond ;
             return cond();
         }
+        else if (peek(TokenType.LPAREN) && 
+            peekNext(TokenType.AND, TokenType.OR))
+        {
+            // expression -> logical ;
+            return logical();
+        }
 
         // expression -> equality ;
         return equality();
+    }
+
+    private Expr logical()
+    {
+        // Consume (
+        nextToken();
+
+        Token operator = nextToken();
+        Expr first = expression();
+        Expr second = expression();
+        Expr expr = new Expr.Logical(operator, first, second);
+
+        while (peekExpr())
+        {
+            second = expression();
+            expr = new Expr.Logical(operator, expr, second);
+        }
+
+        consumeRightParen(operator.lexeme);
+        return expr;
     }
 
     // cond -> "(" "cond" clause+ else? ")" ;

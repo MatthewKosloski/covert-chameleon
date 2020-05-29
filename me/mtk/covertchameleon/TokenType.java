@@ -26,6 +26,9 @@ enum TokenType
     // Branching expressions
     IF, THEN, ELSE, COND,
 
+    // Logical operators
+    AND, OR,
+
     // equal? and nequal? operators
     EQUAL_PREDICATE, NEQUAL_PREDICATE,
 

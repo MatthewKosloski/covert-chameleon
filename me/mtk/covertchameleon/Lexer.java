@@ -81,6 +81,8 @@ public class Lexer
         keywords.put("then", TokenType.THEN);
         keywords.put("else", TokenType.ELSE);
         keywords.put("cond", TokenType.COND);
+        keywords.put("and", TokenType.AND);
+        keywords.put("or", TokenType.OR);
     }
 
     /**

@@ -25,6 +25,23 @@ public class Interpreter implements Expr.Visitor<Object>
     }
 
     @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        
+        Object first = evaluate(expr.first);
+
+        if (expr.operator.type == TokenType.OR)
+        {
+            if (isTruthy(first)) return first;
+        }
+        else 
+        {
+            if (!isTruthy(first)) return first;
+        }
+        
+        return evaluate(expr.second);
+    }
+
+    @Override
     public Object visitClauseExpr(Expr.Clause expr) {return null;}
 
     @Override
@@ -148,6 +165,12 @@ public class Interpreter implements Expr.Visitor<Object>
             case RPAREN:
             case TRUE:
             case TRUE_PREDICATE:
+            case COND:
+            case IF:
+            case THEN:
+            case ELSE:
+            case AND:
+            case OR:
             case UNIDENTIFIED:
             break;
         

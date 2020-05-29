@@ -22,7 +22,7 @@ What has and has not (but will) be implemented:
 - [x] Let expression
 - [x] Control flow
 - [x] Relational operators
-- [ ] Logical operators
+- [x] Logical operators
 - [x] Boolean data types
 - [x] `null` data type
 - [x] `print` expressions
@@ -41,8 +41,7 @@ expression            -> equality
                       | then
                       | else
                       | cond 
-                      | and
-                      | or;
+                      | logical ;
 
 equality              -> "(" ("equal?" | "nequal?") comparison comparison+ ")" ;
 comparison            -> "(" ( ">" | ">=" | "<" | "<=" ) binary binary+ ")" ; 
@@ -63,8 +62,7 @@ else                  -> "(" "else" body ")" ;
 cond                  -> "(" "cond" clause+ else? ")" ;
 clause                -> "(" expression body ")" ;
 
-and                   -> "(" "and" expression expression+ ")" ;
-or                    -> "(" "or" expression expression+ ")" ;
+logical               -> "(" ("and" | "or") expression expression+ ")" ;
 
 literal               -> number | identifier 
                       | boolean 

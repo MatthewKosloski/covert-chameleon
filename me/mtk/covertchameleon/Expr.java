@@ -17,9 +17,30 @@ abstract class Expr
 		T visitIfExpr(IfExpr expr);
 		T visitCondExpr(Cond expr);
 		T visitClauseExpr(Clause expr);
+		T visitLogicalExpr(Logical expr);
 	}
 
 	abstract <T> T accept(Visitor<T> visitor);
+
+	static class Logical extends Expr
+	{
+		final Token operator;
+		final Expr first;
+		final Expr second;
+
+		public Logical(Token operator, Expr first, Expr second)
+		{
+			this.operator = operator;
+			this.first = first;
+			this.second = second;
+		}
+
+		@Override
+		public <T> T accept(Visitor<T> visitor)
+		{
+			return visitor.visitLogicalExpr(this);
+		}
+	}
 
 	static class Body extends Expr
 	{
