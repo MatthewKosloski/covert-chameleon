@@ -16,18 +16,6 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 - Null data type (`null`)
 - `print` and `println` expressions for sending output to the standard output stream
 
-## Checklist
-
-What has and has not (but will) be implemented:
-
-- [x] Let expression
-- [x] Control flow
-- [x] Relational operators
-- [x] Logical operators
-- [x] Boolean data types
-- [x] `null` data type
-- [x] `print` expressions
-
 ## Grammar
 
 `Parser.java` implements the following grammar (written in [Extended Backus-Naur form](https://en.wikipedia.org/wiki/Extended_Backus%E2%80%93Naur_form)) that describes the language's syntax:
