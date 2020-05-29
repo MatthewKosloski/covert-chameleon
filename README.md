@@ -10,7 +10,7 @@ The interpreter has all of the functionality included in Magnetic Moose (interpr
 
 - A `let` expression that creates a lexical scope and binds values to identifiers within the scope
 - Control flow structures `if` and `cond`. The former is analaguous to the C-style ternary operator `test ? consequent : alternative` and the latter is analaguous to `if {} else if {} else {}`.
-- Relational (e.g, `>=`) and logical (e.g., `==`, 'or', 'and') operators
+- Relational (e.g, `>=`) and logical (e.g., `or`, `and`) operators
 - Boolean data types (`true` and `false`)
 - Null data type (`null`)
 - `print` and `println` expressions for sending output to the standard output stream
