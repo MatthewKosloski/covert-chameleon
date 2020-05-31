@@ -4,7 +4,7 @@ In my quest to understand how interpeters for high-level programming languages w
 
 Instead of building it all in one go (which would be too overwhelming), I decided to break it up into iterations.  Each iteration will be an independent interpreter that is more complex than the last.
 
-Covert Chameleon is the second iteration of the Torrey interpreter, a continuation of the first iteration, [Magnetic Moose](https://github.com/MatthewKosloski/magnetic-moose).  See the third iteration, [Truncated Tarantula](https://github.com/MatthewKosloski/truncated-tarantula)
+Covert Chameleon is the second iteration of the Torrey interpreter, a continuation of the first iteration, [Magnetic Moose](https://github.com/MatthewKosloski/magnetic-moose).  See the third iteration, [Truncated Tarantula](https://github.com/MatthewKosloski/truncated-tarantula).
 
 The interpreter has all of the functionality included in Magnetic Moose (interpretation of fully parenthesized arithmetic expressions) but adds the following:
 
